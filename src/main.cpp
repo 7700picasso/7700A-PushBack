@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
-/*    Author:       7700A Anchovies                                                  */
-/*    Created:      8/25/2025, 5:31:59 PM                                     */
+/*    Author:       Student                                                   */
+/*    Created:      9/25/2025, 5:51:32 PM                                     */
 /*    Description:  V5 project                                                */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
@@ -15,10 +15,14 @@ using namespace vex;
 competition Competition;
 
 // define your global instances of motors and other devices here
+
 motor LF (PORT18, ratio18_1, true);
 motor LB(PORT17, ratio18_1, true);
 motor RF(PORT19, ratio18_1, false);
 motor RB(PORT20, ratio18_1, false);
+motor IntakeL(PORT11);
+motor IntakeR(PORT12);
+
 brain Brain;
 controller Controller;
 
@@ -38,7 +42,8 @@ controller Controller;
   }
 
 
-
+	
+	
 
 
   double YOFFSET = 20; //offset for the display
@@ -165,10 +170,26 @@ Display ();
 
     Drive(Lspeed, Rspeed, 10);
 
+	if (Controller.ButtonL1.pressing()){
+		IntakeR.spin(forward, 100, pct);
+		IntakeL.spin(forward, 100, pct);
+	}
+	else if (Controller.ButtonL2.pressing()){
+		IntakeR.spin(reverse, 100, pct);
+		IntakeL.spin(reverse, 100, pct);
+	}
+
+	else {
+		IntakeL.stop();
+		IntakeR.stop();
+	}
+
+
    wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
 }
+  
 
 //
 // Main will set up the competition functions and callbacks.
