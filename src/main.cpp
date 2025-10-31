@@ -1,10 +1,10 @@
-/*----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------*\
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
 /*    Author:       Student                                                   */
 /*    Created:      9/25/2025, 5:51:32 PM                                     */
 /*    Description:  V5 project                                                */
-/*                                                                            */
+/*    Don't use Port19                                                        */
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
@@ -16,12 +16,13 @@ competition Competition;
 
 // define your global instances of motors and other devices here
 
-motor LF (PORT18, ratio18_1, true);
-motor LB(PORT17, ratio18_1, true);
-motor RF(PORT19, ratio18_1, false);
-motor RB(PORT20, ratio18_1, false);
-motor IntakeL(PORT11);
-motor IntakeR(PORT12);
+motor LF (PORT10, ratio6_1, true);
+motor LB(PORT19, ratio6_1, true);
+motor RF(PORT17, ratio6_1, false);
+motor RB(PORT20, ratio6_1, false);
+motor Intake(PORT15, ratio18_1, false);
+motor Conveyor(PORT16, ratio18_1, true);
+motor Outtake (PORT14, ratio18_1, true);
 
 brain Brain;
 controller Controller;
@@ -40,9 +41,6 @@ controller Controller;
 
 
   }
-
-
-	
 	
 
 
@@ -171,19 +169,34 @@ Display ();
     Drive(Lspeed, Rspeed, 10);
 
 	if (Controller.ButtonL1.pressing()){
-		IntakeR.spin(forward, 100, pct);
-		IntakeL.spin(forward, 100, pct);
+		Intake.spin(forward, 100, pct);
+		Conveyor.spin(forward, 100, pct);
+		Outtake.spin(reverse, 30, pct);
 	}
 	else if (Controller.ButtonL2.pressing()){
-		IntakeR.spin(reverse, 100, pct);
-		IntakeL.spin(reverse, 100, pct);
+		Intake.spin(reverse, 100, pct);
+		Conveyor.spin(reverse, 100, pct);
 	}
 
 	else {
-		IntakeL.stop();
-		IntakeR.stop();
+		Intake.stop();
+		Conveyor.stop();
+	}
+if (Controller.ButtonR1.pressing()){
+		
+		Outtake.spin(reverse, 30, pct);
+	}
+	else if (Controller.ButtonR2.pressing()){
+		Outtake.spin(reverse, 100, pct);
+		Intake.spin(reverse, 100, pct);
+		Conveyor.spin(forward, 100, pct);
 	}
 
+	else {
+		Outtake.stop();
+		Conveyor.stop();
+		Intake.stop();
+	}
 
    wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
