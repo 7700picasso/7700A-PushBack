@@ -10,7 +10,7 @@ competition Competition;
 // define your global instances of motors and other devices here
 
 motor LF (PORT10, ratio6_1, true);
-motor LB(PORT19, ratio6_1, true);
+motor LB(PORT18, ratio6_1, true);
 motor RF(PORT17, ratio6_1, false);
 motor RB(PORT20, ratio6_1, false);
 motor Intake(PORT13, ratio18_1, false);
@@ -83,6 +83,12 @@ void Display()
 	double RFTemp = RF.temperature(celsius);
 	double RBCurr = RB.current(amp);
 	double RBTemp = RB.temperature(celsius);
+	double intakeTemp = Intake.temperature(celsius);
+	double intakeCurr = Intake.current(amp);
+	double ConveyorTemp = Conveyor.temperature(celsius);
+	double ConveyorCurr = Conveyor.current(amp);
+	double OuttakeTemp= Outtake.temperature(celsius);
+	double OuttakeCurr = Outtake.current(amp);
 
 
 	if (LF.installed()){
@@ -114,6 +120,24 @@ void Display()
 		Brain.Screen.printAt(300, YOFFSET + 91, "RB");
 	} else {
 		Brain.Screen.printAt(5, YOFFSET + 91, "RB Problem");
+	}
+	if (Intake.installed()) {
+		MotorDisplay(121, intakeCurr, intakeTemp);
+		Brain.Screen.printAt(300, YOFFSET + 121, "Intake");
+	} else {
+		Brain.Screen.printAt(5, YOFFSET + 121, "Intake Problem");
+	}
+	if (Conveyor.installed()) {
+		MotorDisplay(151, ConveyorCurr, ConveyorTemp);
+		Brain.Screen.printAt(300, YOFFSET + 151, "Conveyor");
+	} else {
+		Brain.Screen.printAt(5, YOFFSET + 151, "Conveyor Problem");
+	}
+	if (Outtake.installed()) {
+		MotorDisplay(181, OuttakeCurr, OuttakeTemp);
+		Brain.Screen.printAt(300, YOFFSET + 181, "Outtake");
+	} else {
+		Brain.Screen.printAt(5, YOFFSET + 181, "Outtake Problem");
 	}
 
 }
