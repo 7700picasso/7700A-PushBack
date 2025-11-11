@@ -178,45 +178,52 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
+//Motor Monitor
+
 Display ();
+
+
+//drivecode
+
+Brain.Screen.print("Hello");
 
     int Lspeed = Controller.Axis3.position(pct);
     int Rspeed = Controller.Axis2.position(pct);
 
     Drive(Lspeed, Rspeed, 10);
 
-	//if (Controller.ButtonL1.pressing()){
-		//Intake.spin(forward, 85, pct);
-		//Conveyor.spin(forward, 85, pct);
-		//Outtake.spin(reverse, 10, pct);
-	//}
-	//else if (Controller.ButtonL2.pressing()){
-		//Intake.spin(reverse, 100, pct);
-		//Conveyor.spin(reverse, 100, pct);
-	//}
+	
 
-	//else {
-		//Intake.stop();
-		//Conveyor.stop();
-	//}
-if (Controller.ButtonR1.pressing()){
-		
-		Outtake.spin(reverse, 5, pct);
-		Intake.spin(fwd, 80, pct);
-		Conveyor.spin(fwd, 70, pct);
-	}
-	else if (Controller.ButtonR2.pressing()){
-		Outtake.spin(fwd, 100, pct);
+//Scoring and intake
+
+if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
+		Outtake.spin(fwd, 100, pct); 
+		Conveyor.spin(fwd, 90, pct);
 		Intake.spin(fwd, 100, pct);
-		Conveyor.spin(fwd, 100, pct);
+		}
+
+
+	else if (Controller.ButtonR2.pressing()){	//Outtake (everything rev)
+		Outtake.spin(reverse, 100, pct);
+		Conveyor.spin(reverse, 100, pct);
+		Intake.spin(reverse, 100, pct);
 	}
 
-	else {
+	else { // else stop all
 		Outtake.stop();
 		Conveyor.stop();
 		Intake.stop();
 	}
 
+	 if (Controller.ButtonL1.pressing()){  //Intakeing (outake doesn't spin) 
+		Conveyor.spin(fwd, 100, pct);
+		Outtake.spin(reverse, 10, pct);
+		Intake.spin(fwd, 100, pct);}
+	// else { // else stop all
+	// 	Outtake.stop();
+	// 	Conveyor.stop();
+	// 	Intake.stop();
+	// }
    wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
