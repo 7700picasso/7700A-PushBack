@@ -10,12 +10,12 @@ competition Competition;
 // define your global instances of motors and other devices here
 
 motor LF (PORT10, ratio6_1, true);
-motor LB(PORT19, ratio6_1, true);
-motor RF(PORT17, ratio6_1, false);
+motor LB(PORT18, ratio6_1, true);
+motor RF(PORT15, ratio6_1, false);
 motor RB(PORT20, ratio6_1, false);
-motor Intake(PORT15, ratio18_1, false);
+motor Intake(PORT13, ratio18_1, false);
 motor Conveyor(PORT16, ratio18_1, true);
-motor Outtake (PORT14, ratio18_1, true);
+motor Outtake (PORT12, ratio18_1, true);
 
 brain Brain;
 controller Controller;
@@ -162,7 +162,6 @@ Display ();
 
 //drivecode
 
-Brain.Screen.print("Hello");
 
     int Lspeed = Controller.Axis3.position(pct);
     int Rspeed = Controller.Axis2.position(pct);
