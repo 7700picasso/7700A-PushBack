@@ -11,11 +11,13 @@ competition Competition;
 
 motor LF (PORT10, ratio6_1, true);
 motor LB(PORT18, ratio6_1, true);
-motor RF(PORT15, ratio6_1, false);
+motor RF(PORT14, ratio6_1, false);
 motor RB(PORT20, ratio6_1, false);
 motor Intake(PORT13, ratio18_1, false);
 motor Conveyor(PORT16, ratio6_1, true);
 motor Outtake (PORT12, ratio6_1, true);
+
+digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.A);
 
 brain Brain;
 controller Controller;
@@ -218,11 +220,16 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		Conveyor.spin(fwd, 100, pct);
 		Outtake.spin(reverse, 10, pct);
 		Intake.spin(fwd, 100, pct);}
-	// else { // else stop all
-	// 	Outtake.stop();
-	// 	Conveyor.stop();
-	// 	Intake.stop();
-	// }
+
+
+	if (Controller.ButtonA.pressing()) {
+			PneuSCRAPER.set(true);
+		} else if (Controller.ButtonB.pressing()) {
+			PneuSCRAPER.set(false);
+		}
+
+
+
    wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
