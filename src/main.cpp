@@ -9,6 +9,9 @@ competition Competition;
 
 // define your global instances of motors and other devices here
 
+brain Brain;
+controller Controller;
+
 motor LF (PORT10, ratio6_1, true);
 motor LB(PORT18, ratio6_1, true);
 motor RF(PORT14, ratio6_1, false);
@@ -17,14 +20,23 @@ motor Intake(PORT13, ratio18_1, false);
 motor Conveyor(PORT16, ratio6_1, true);
 motor Outtake (PORT12, ratio6_1, true);
 
+inertial Gyro = inertial(PORT2);
+
 digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.A);
 
-brain Brain;
-controller Controller;
+
 
 /*---------------------------------------------------------------------------*\
 |*                          Pre-Autonomous Functions                         *|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 \*---------------------------------------------------------------------------*/
+ 
+float pi = 3.14;
+float wheeld = 3.25;
+float wheelr = wheeld / 2;
+float wheelc = pi * wheeld;
+float gearratio = 0.75;
+ 
+ 
   void Drive(int Lspeed, int Rspeed, int wt){
     
     LF.spin(fwd, Lspeed, pct);
@@ -37,6 +49,13 @@ controller Controller;
 
   }
 	
+	void drivestop(){
+		LF.stop(brake);
+		LB.stop(brake);
+		RF.stop(brake);
+		RB.stop(brake);
+	}
+
 
 
   double YOFFSET = 20; //offset for the display
@@ -143,6 +162,54 @@ void Display()
 	}
 
 }
+
+void inchdrive (float target) {
+	
+	float x = 0;
+	float error = target - x;
+	float kp = 2.3;
+	float speed = kp * error;
+	float accuracy = 0.5;
+	LF.setPosition (0, rev);
+
+	while (fabs(error) > accuracy){
+		Drive(speed, speed, 10);
+		x = LF.position(rev) * wheeld * pi * gearratio;
+		error = target - x;
+		speed = kp * error;
+	}
+
+	drivestop();
+
+}
+
+
+void gyroturn (float target) {
+	float heading = 0.0;
+	float accuracy = 3.0;
+	float error = target - heading;
+	float kp = 0.3;
+	float speed = kp * error;
+	Gyro.setRotation(0.0, degrees);
+
+	while (fabs(error) >= accuracy){
+		speed = kp * error;
+		Drive(speed, -speed, 10);
+		heading = Gyro.rotation();
+		error = target - heading;
+	}
+
+	drivestop();
+
+}
+
+
+void gyroprint(){
+	float rotation = Gyro.rotation (deg);
+	Brain.Screen.printAt(1, 60, "Rotation = %.2f.degrees", rotation);
+}
+
+
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
@@ -162,9 +229,16 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  // ..........................................................................
-  // Insert autonomous user code here.
-  // ..........................................................................
+
+	//inchdrive(20);
+	
+	inchdrive(30);
+	Intake.spin(fwd, 100,pct);
+	
+
+
+
+
 }
 
 /*---------------------------------------------------------------------------*\
