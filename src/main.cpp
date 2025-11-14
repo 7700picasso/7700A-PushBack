@@ -188,7 +188,7 @@ void gyroturn (float target) {
 	float heading = 0.0;
 	float accuracy = 3.0;
 	float error = target - heading;
-	float kp = 0.3;
+	float kp = 0.4;
 	float speed = kp * error;
 	Gyro.setRotation(0.0, degrees);
 
@@ -209,14 +209,37 @@ void gyroprint(){
 	Brain.Screen.printAt(1, 60, "Rotation = %.2f.degrees", rotation);
 }
 
+void IntakeBalls (){ 
+	Conveyor.spin(fwd, 40, pct);
+	Outtake.spin(reverse, 5, pct);
+	Intake.spin(fwd, 100, pct);
+	}
 
+void ScoreBalls(){ 
+		Outtake.spin(fwd, 100, pct); 
+		Conveyor.spin(fwd, 90, pct);
+		Intake.spin(fwd, 100, pct);
+}
+
+void StopIntake(){ 
+		Outtake.stop();
+		Conveyor.stop();
+		Intake.stop();
+}
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
 
+while(Gyro.isCalibrating()){
+	wait(20, msec); 
+}
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
+
+
+
+
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -230,12 +253,30 @@ void pre_auton(void) {
 
 void autonomous(void) {
 
-	//inchdrive(20);
-	
-	inchdrive(30);
-	Intake.spin(fwd, 100,pct);
-	
+	//Left Red or Blue Right Side Auton
+	IntakeBalls(); 
+	inchdrive(28);
+	StopIntake(); 
+	inchdrive(-10);
+	gyroturn(-60);  
+	inchdrive(25); 
+	gyroturn(-90); 
+	inchdrive(-8); 
+	ScoreBalls(); 
 
+//----------------------------------------------\
+
+	//Right Red or Blue Left Side Auton
+	
+	// IntakeBalls(); 
+	// inchdrive(28);
+	// StopIntake(); 
+	// inchdrive(-12);
+	// gyroturn(60);  
+	// inchdrive(25); 
+	// gyroturn(90); 
+	// inchdrive(-8); 
+	// ScoreBalls();
 
 
 
