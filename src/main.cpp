@@ -20,7 +20,7 @@ motor Intake(PORT13, ratio18_1, false);
 motor Conveyor(PORT16, ratio6_1, true);
 motor Outtake (PORT12, ratio6_1, true);
 
-inertial Gyro = inertial(PORT2);
+inertial Gyro = inertial(PORT6);
 
 digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.A);
 
@@ -185,12 +185,12 @@ void inchdrive (float target) {
 
 
 void gyroturn (float target) {
+	Gyro.setRotation(0.0, degrees);
 	float heading = 0.0;
 	float accuracy = 3.0;
 	float error = target - heading;
 	float kp = 0.4;
 	float speed = kp * error;
-	Gyro.setRotation(0.0, degrees);
 
 	while (fabs(error) >= accuracy){
 		speed = kp * error;
@@ -252,21 +252,27 @@ while(Gyro.isCalibrating()){
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
+	// while(true){
+	// 	gyroprint();
+	// }
+	gyroprint();
+	gyroturn(90);
+	
 
-	//Left Red or Blue Right Side Auton
-	IntakeBalls(); 
-	inchdrive(28);
-	StopIntake(); 
-	inchdrive(-10);
-	gyroturn(-60);  
-	inchdrive(25); 
-	gyroturn(-90); 
-	inchdrive(-8); 
-	ScoreBalls(); 
+	//Left Side Auton working on dis
+	// IntakeBalls(); 
+	// inchdrive(28);
+	// StopIntake(); 
+	// inchdrive(-12);
+	// gyroturn(-100);  
+	// inchdrive(25); 
+	// gyroturn(-90); 
+	// inchdrive(-8); 
+	// ScoreBalls(); 
 
 //----------------------------------------------\
 
-	//Right Red or Blue Left Side Auton
+	//Right Side Auton
 	
 	// IntakeBalls(); 
 	// inchdrive(28);
