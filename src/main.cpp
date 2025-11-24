@@ -343,7 +343,7 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		Intake.spin(fwd, 100, pct);}
 
 
-	if (Controller.ButtonA.pressing()) {
+	if (Controller.ButtonB.pressing()) {
 			PneuSCRAPER.set(true);
 		} else if (Controller.ButtonB.pressing()) {
 			PneuSCRAPER.set(false);
