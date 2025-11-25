@@ -22,7 +22,7 @@ motor Outtake (PORT12, ratio6_1, true);
 
 inertial Gyro = inertial(PORT6);
 
-digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.A);
+digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.B);
 
 
 
@@ -256,19 +256,17 @@ void autonomous(void) {
 	// 	gyroprint();
 	// }
 	gyroprint();
-	gyroturn(90);
 	
-
 	//Left Side Auton working on dis
-	// IntakeBalls(); 
-	// inchdrive(28);
-	// StopIntake(); 
-	// inchdrive(-12);
-	// gyroturn(-100);  
-	// inchdrive(25); 
-	// gyroturn(-90); 
-	// inchdrive(-8); 
-	// ScoreBalls(); 
+	IntakeBalls(); 
+	inchdrive(28);
+	StopIntake(); 
+	inchdrive(-12);
+	gyroturn(-100);  
+	inchdrive(25); 
+	gyroturn(-90); 
+	inchdrive(-8); 
+	ScoreBalls(); 
 
 //----------------------------------------------\
 
@@ -345,7 +343,7 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 
 	if (Controller.ButtonB.pressing()) {
 			PneuSCRAPER.set(true);
-		} else if (Controller.ButtonB.pressing()) {
+		} else if (Controller.ButtonA.pressing()) {
 			PneuSCRAPER.set(false);
 		}
 
