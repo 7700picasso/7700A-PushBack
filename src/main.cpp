@@ -8,7 +8,7 @@ using namespace vex;
 competition Competition;
 
 // define your global instances of motors and other devices here
-
+brain Brain;
 motor LF (PORT10, ratio6_1, true);
 motor LB(PORT18, ratio6_1, true);
 motor RF(PORT14, ratio6_1, false);
@@ -19,7 +19,7 @@ motor Outtake (PORT12, ratio6_1, true);
 
 digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.A);
 
-brain Brain;
+
 controller Controller;
 
 /*---------------------------------------------------------------------------*\
