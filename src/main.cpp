@@ -9,21 +9,25 @@ competition Competition;
 
 // define your global instances of motors and other devices here
 brain Brain;
+
 motor LF (PORT10, ratio6_1, true);
 motor LB(PORT18, ratio6_1, true);
 motor RF(PORT14, ratio6_1, false);
 motor RB(PORT20, ratio6_1, false);
+
 motor Intake(PORT13, ratio18_1, false);
 motor Conveyor(PORT16, ratio6_1, true);
 motor Outtake (PORT12, ratio6_1, true);
 
-digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.A);
+inertial Gyro (PORT6);
 
+digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.A);
+digital_out PneuDESCORE = digital_out(Brain.ThreeWirePort.B);
 
 controller Controller;
 
 /*---------------------------------------------------------------------------*\
-|*                          Pre-Autonomous Functions                         *|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|*                          Pre-Autonomous Functions                         *|
 \*---------------------------------------------------------------------------*/
   void Drive(int Lspeed, int Rspeed, int wt){
     
@@ -143,10 +147,54 @@ void Display()
 	}
 
 }
+
+
+void gyroTurn(float target)
+{
+		float heading=0.0; //initialize a variable for heading
+		float accuracy=8.0; //how accurate to make the turn in degrees
+		float error=target-heading;
+		float kp= 0.3;
+		float speed=kp*error;
+		Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
+		
+		while(fabs(error)>=accuracy)
+		{
+			speed=kp*error;
+			Drive(speed, -speed, 10); //turn right at Speed
+			heading=Gyro.rotation();  //measure the heading of the robot
+			error=target-heading;  //calculate error
+		}
+			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
+			Drive(0, 0, 0);  //stope the drive
+}
+
+
+void inchdrive (float inches){
+	float x = 0;
+	float error = inches - x;
+	float kp = 2.0;
+	float speed = error * kp;
+	float accuracy = 0.5; 
+	LF.resetPosition(); 
+	x = LF.position(rev)*3.25*0.75*M_PI; 
+
+	while ( fabs(error)>= accuracy) { 
+		Drive(speed, speed, 10); 
+		x = LF.position(rev)*3.25*0.75*M_PI; 
+		error = inches - x;
+		speed = error * kp;
+
+	}
+	Drive(0,0,0); 
+
+}
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-
+	while (Gyro.isCalibrating()){ 
+		wait(100, msec); 
+	}
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -162,9 +210,11 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  // ..........................................................................
-  // Insert autonomous user code here.
-  // ..........................................................................
+	//inchdrive(24); 
+	gyroTurn (90);
+	// wait(1, sec); 
+	// gyroTurn(-90); 
+
 }
 
 /*---------------------------------------------------------------------------*\
@@ -178,7 +228,9 @@ void autonomous(void) {
 \*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  // User control code here, inside the loop
+  
+PneuDESCORE.set(true);
+
   while (1) {
 //Motor Monitor
 
@@ -222,11 +274,21 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		Intake.spin(fwd, 100, pct);}
 
 
-	if (Controller.ButtonA.pressing()) {
+
+//Scraper
+	if (Controller.ButtonY.pressing()) {
 			PneuSCRAPER.set(true);
-		} else if (Controller.ButtonB.pressing()) {
+		} else if (Controller.ButtonX.pressing()) {
 			PneuSCRAPER.set(false);
 		}
+
+//Descore
+	if (Controller.ButtonA.pressing()) {
+			PneuDESCORE.set(true);
+		} else if (Controller.ButtonB.pressing()) {
+			PneuDESCORE.set(false);
+		}
+
 
 
 
