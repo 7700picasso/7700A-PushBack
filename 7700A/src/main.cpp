@@ -161,7 +161,7 @@ Display ();
 
 
 //drivecode
-
+Brain.Screen.print ("HELLO");
 
     int Lspeed = Controller.Axis3.position(pct);
     int Rspeed = Controller.Axis2.position(pct);
