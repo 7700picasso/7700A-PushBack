@@ -149,7 +149,7 @@ void Display()
 }
 
 
-void gyroTurn(float target)
+void gyroturn(float target)
 {
 		float heading=0.0; //initialize a variable for heading
 		float accuracy=8.0; //how accurate to make the turn in degrees
@@ -189,6 +189,30 @@ void inchdrive (float inches){
 	Drive(0,0,0); 
 
 }
+
+void intake (){
+	Conveyor.spin(fwd, 100, pct);
+	Outtake.spin(reverse, 0, pct);
+	Intake.spin(fwd, 100, pct);
+}
+
+void outtake (){
+	Conveyor.spin(reverse, 100, pct);
+	Outtake.spin(reverse, 100, pct);
+	Intake.spin(reverse, 100, pct);
+}
+
+void score (){
+	Conveyor.spin(fwd, 100, pct);
+	Outtake.spin(fwd, 100, pct);
+	Intake.spin(fwd, 100, pct);
+}
+
+void stopsub3 (){
+	Conveyor.stop();
+	Outtake.stop();
+	Intake.stop();
+}
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
@@ -209,13 +233,66 @@ void pre_auton(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
+
+
 void autonomous(void) {
-	//inchdrive(24); 
-	gyroTurn (90);
-	// wait(1, sec); 
-	// gyroTurn(-90); 
+//left side
+	// intake();
+	// inchdrive(27);
+	// wait(500, msec);
+	// inchdrive(-15);
+	// gyroturn(-70);
+	// inchdrive (29);
+	// gyroturn (-90);
+	// inchdrive (-16);
+	// score();
+
+//right side
+	// intake();
+	// inchdrive(27);
+	// wait(500, msec);
+	// inchdrive(-15);
+	// gyroturn(70);
+	// inchdrive (29);
+	// gyroturn (90);
+	// inchdrive (-16);
+	// score();
+
+//skills
+inchdrive(36);
+gyroturn(-90);
+inchdrive(-4);
+PneuSCRAPER.set(true);
+intake();
+Drive(40, 40, 650); 
+
+// Drive(-40, -40, 500);   was too odd:%
+// Drive(40, 40, 600); 
+// Drive(-40, -40, 500);
+// Drive(40, 40, 600); 
+// Drive(-40, -40, 500);
+// Drive(40, 40, 600); 
+// Drive(-40, -40, 500);
+// Drive(40, 40, 600); 
+
+Drive(0, 0, 0); // we should have gotten all the blocks
+Drive(40, 40, 400 ); 
+Drive(0,0,0); 
+wait(4500, msec);
+// inchdrive(-2);
+// inchdrive(2);
+// inchdrive(-2);
+// inchdrive(2);
+// inchdrive(-2);
+// inchdrive(2);
+// gyroturn(45);
+// inchdrive(3);
+// gyroturn(-45);
+inchdrive(-24.5);
+score();
 
 }
+
 
 /*---------------------------------------------------------------------------*\
 |*                                                                           *|
@@ -268,7 +345,7 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		Intake.stop();
 	}
 
-	 if (Controller.ButtonL1.pressing()){  //Intakeing (outake doesn't spin) 
+	 if (Controller.ButtonL1.pressing()){  //Intakeing (outake) 
 		Conveyor.spin(fwd, 100, pct);
 		Outtake.spin(reverse, 10, pct);
 		Intake.spin(fwd, 100, pct);}
