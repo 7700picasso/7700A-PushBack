@@ -388,6 +388,8 @@ while(Gyro.isCalibrating()){
 			else if(AutonSelected == 3) { 
 			Brain.Screen.clearLine(220); 
 			Brain.Screen.printAt(1, 220, "No Auton" ); 
+
+			
 		
 		}
 			
