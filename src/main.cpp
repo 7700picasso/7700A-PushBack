@@ -213,12 +213,75 @@ void stopsub3 (){
 	Outtake.stop();
 	Intake.stop();
 }
+
+int AutonSelected = 2;
+int AutonMin = 0;
+int AutonMax = 4;
+
+void drawGUI() {
+	// Draws 2 buttons to be used for selecting auto
+	Brain.Screen.clearScreen();
+	Brain.Screen.printAt(1, 40, "Select Auton then Press Go");
+	Brain.Screen.printAt(1, 200, "Auton Selected =  %d   ", AutonSelected);
+	Brain.Screen.setFillColor(red);
+	Brain.Screen.drawRectangle(20, 50, 100, 100);
+	Brain.Screen.drawCircle(300, 75, 25);
+	Brain.Screen.printAt(25, 75, "Select");
+	Brain.Screen.setFillColor(green);
+	Brain.Screen.drawRectangle(170, 50, 100, 100);
+	Brain.Screen.printAt(175, 75, "GO");
+	Brain.Screen.setFillColor(black);
+}
+
+
+
+void selectAuton() {
+		bool selectingAuton = true;
+		
+		int x = Brain.Screen.xPosition(); // get the x position of last touch of the screen
+		int y = Brain.Screen.yPosition(); // get the y position of last touch of the screen
+		
+		// check to see if buttons were pressed
+		if (x >= 20 && x <= 120 && y >= 50 && y <= 150){ // select button pressed
+				AutonSelected++;
+				if (AutonSelected > AutonMax){
+						AutonSelected = AutonMin; // rollover
+				}
+				Brain.Screen.printAt(1, 200, "Auton Selected =  %d   ", AutonSelected);
+		}
+		
+		
+		if (x >= 170 && x <= 270 && y >= 50 && y <= 150) {
+				selectingAuton = false; // GO button pressed
+				Brain.Screen.printAt(1, 200, "Auton  =  %d   GO           ", AutonSelected);
+		}
+		
+		if (!selectingAuton) {
+				Brain.Screen.setFillColor(green);
+				Brain.Screen.drawCircle(300, 75, 25);
+		} else {
+				Brain.Screen.setFillColor(red);
+				Brain.Screen.drawCircle(300, 75, 25);
+		}
+		
+		wait(10, msec); // slow it down
+		Brain.Screen.setFillColor(black);
+}
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
+	PneuDESCORE.set(true);
+	
+	PneuSCRAPER.set(false); 
+	
+		drawGUI();
+		Brain.Screen.pressed(selectAuton);
+		
+	
 	while (Gyro.isCalibrating()){ 
 		wait(100, msec); 
 	}
+	
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -236,7 +299,68 @@ void pre_auton(void) {
 
 
 void autonomous(void) {
-//left side
+
+switch (AutonSelected) {
+				case 0:
+					//left side autonomoua
+					intake();
+					inchdrive(27);
+					wait(500, msec);
+					inchdrive(-15);
+					gyroturn(-70);
+					inchdrive (29);
+					gyroturn (-90);
+					inchdrive (-16);
+					score();
+					break;
+				
+				case 1:
+					//right side autonomous
+					intake();
+					inchdrive(27);
+					wait(500, msec);
+					inchdrive(-15);
+					gyroturn(80);
+					inchdrive (30);
+					gyroturn (93);
+					inchdrive (-12.4);
+					score();
+					break;
+					
+				
+				case 2:///auton skills
+						inchdrive(36);
+						gyroturn(-90);
+						inchdrive(-4);
+						PneuSCRAPER.set(true);
+						intake();
+						Drive(40, 40, 450); 
+						Drive(0, 0, 0); // we should have gotten all the blocks
+						Drive(40, 40, 400 ); 
+						Drive(0,0,0); 
+						wait(4500, msec);
+						inchdrive(-26);
+						score();
+						wait(3000, msec);
+						inchdrive(10);
+						gyroturn(90);
+						inchdrive(30);
+
+						
+					break;
+				
+				case 3:
+					//code 3
+					//win match vixt
+
+					break;
+		}
+
+
+
+
+
+	//left side
 	// intake();
 	// inchdrive(27);
 	// wait(500, msec);
@@ -258,38 +382,38 @@ void autonomous(void) {
 	// inchdrive (-16);
 	// score();
 
-//skills
-inchdrive(36);
-gyroturn(-90);
-inchdrive(-4);
-PneuSCRAPER.set(true);
-intake();
-Drive(40, 40, 650); 
+// //skills
+// inchdrive(36);
+// gyroturn(-90);
+// inchdrive(-4);
+// PneuSCRAPER.set(true);
+// intake();
+// Drive(40, 40, 650); 
 
-// Drive(-40, -40, 500);   was too odd:%
-// Drive(40, 40, 600); 
-// Drive(-40, -40, 500);
-// Drive(40, 40, 600); 
-// Drive(-40, -40, 500);
-// Drive(40, 40, 600); 
-// Drive(-40, -40, 500);
-// Drive(40, 40, 600); 
+// // Drive(-40, -40, 500);   was too odd:%
+// // Drive(40, 40, 600); 
+// // Drive(-40, -40, 500);
+// // Drive(40, 40, 600); 
+// // Drive(-40, -40, 500);
+// // Drive(40, 40, 600); 
+// // Drive(-40, -40, 500);
+// // Drive(40, 40, 600); 
 
-Drive(0, 0, 0); // we should have gotten all the blocks
-Drive(40, 40, 400 ); 
-Drive(0,0,0); 
-wait(4500, msec);
-// inchdrive(-2);
-// inchdrive(2);
-// inchdrive(-2);
-// inchdrive(2);
-// inchdrive(-2);
-// inchdrive(2);
-// gyroturn(45);
-// inchdrive(3);
-// gyroturn(-45);
-inchdrive(-24.5);
-score();
+// Drive(0, 0, 0); // we should have gotten all the blocks
+// Drive(40, 40, 400 ); 
+// Drive(0,0,0); 
+// wait(4500, msec);
+// // inchdrive(-2);
+// // inchdrive(2);
+// // inchdrive(-2);
+// // inchdrive(2);
+// // inchdrive(-2);
+// // inchdrive(2);
+// // gyroturn(45);
+// // inchdrive(3);
+// // gyroturn(-45);
+// inchdrive(-24.5);
+// score();
 
 }
 
@@ -305,8 +429,8 @@ score();
 \*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  
-PneuDESCORE.set(true);
+Brain.Screen.clearScreen(); 
+
 
   while (1) {
 //Motor Monitor
@@ -347,7 +471,7 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 
 	 if (Controller.ButtonL1.pressing()){  //Intakeing (outake) 
 		Conveyor.spin(fwd, 100, pct);
-		Outtake.spin(reverse, 10, pct);
+		Outtake.spin(reverse, 0, pct);
 		Intake.spin(fwd, 100, pct);}
 
 
