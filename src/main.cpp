@@ -284,7 +284,6 @@ void gyroprint(){
 
 void intake (){ 
 	Conveyor.spin(fwd, 40, pct);
-	Outtake.spin(reverse, 5, pct);
 	Intake.spin(fwd, 100, pct);
 }
 
@@ -369,10 +368,12 @@ while(Gyro.isCalibrating()){
 		drawGUI(); 
 		Brain.Screen.pressed(selectAuton);
 
+
+// Print which code for selection screen
 		while (preAuton){ 
 		if(AutonSelected == 0) { 
-			Brain.Screen.printAt(1, 220, "Left Side" ); 
 			Brain.Screen.clearLine(220);
+			Brain.Screen.printAt(1, 220, "Left Side" ); 
 
 
 		}
@@ -385,19 +386,19 @@ while(Gyro.isCalibrating()){
 			Brain.Screen.printAt(1, 220, "Auton Skills" ); 
 		
 		}
-			else if(AutonSelected == 3) { 
+		else if(AutonSelected == 3) { 
 			Brain.Screen.clearLine(220); 
 			Brain.Screen.printAt(1, 220, "No Auton" ); 
-
-			
-		
 		}
-			
+		else if(AutonSelected == 4) { 
+			Brain.Screen.clearLine(220); 
+			Brain.Screen.printAt(1, 220, "No Auton" ); 
 		}
 
 }
 
-
+	Brain.Screen.clearScreen(); 
+}
 
 		
   // All activities that occur before the competition starts
@@ -453,10 +454,10 @@ void autonomous(void) {
 	inchdrive(27);
 	wait(500, msec);
 	inchdrive(-15);
-	gyroturn(-70);
+	gyroturn(-80);
 	inchdrive (29);
 	gyroturn (-90);
-	inchdrive (-16);
+	inchdrive (-5.5);
 	score();
 
 					break;
@@ -469,16 +470,16 @@ void autonomous(void) {
 	inchdrive(27);
 	wait(500, msec);
 	inchdrive(-15);
-	gyroturn(70);
+	gyroturn(80);
 	inchdrive (29);
 	gyroturn (90);
-	inchdrive (-16);
+	inchdrive (-5.5);
 	score();
 					break;
 				
 				case 2:
 					//code 2
-					//skills
+					//skills left
 	inchdrive(36);
 	gyroturn(-90);
 	inchdrive(-3.5);
@@ -495,6 +496,8 @@ void autonomous(void) {
 		}
 
 
+	}
+//Test Code
 
 	//left side
 	// intake();
@@ -551,7 +554,7 @@ void autonomous(void) {
 // inchdrive(-24.5);
 // score();
 
-}
+
 
 
 /*---------------------------------------------------------------------------*\
@@ -620,9 +623,9 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		}
 
 //Descore
-	if (Controller.ButtonA.pressing()) {
+	if (Controller.ButtonB.pressing()) {
 			PneuDESCORE.set(true);
-		} else if (Controller.ButtonB.pressing()) {
+		} else if (Controller.ButtonA.pressing()) {
 			PneuDESCORE.set(false);
 		}
 
