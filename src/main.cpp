@@ -449,15 +449,15 @@ void autonomous(void) {
 	switch (AutonSelected) {
 				case 0:
 					//code 0
-					//left
+					//Left Side Autonomous
 	intake();
 	inchdrive(27);
 	wait(500, msec);
 	inchdrive(-15);
 	gyroturn(-80);
-	inchdrive (29);
+	inchdrive (28);
 	gyroturn (-90);
-	inchdrive (-5.5);
+	inchdrive (-6.5);
 	score();
 
 					break;
@@ -480,8 +480,8 @@ void autonomous(void) {
 				case 2:
 					//code 2
 					//skills left
-	inchdrive(36);
-	gyroturn(-90);
+	inchdrive(32);
+	gyroturn(-104);
 	inchdrive(-3.5);
 	PneuSCRAPER.set(true);
 	intake();
@@ -612,6 +612,19 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		Conveyor.spin(fwd, 100, pct);
 		Outtake.spin(reverse, 0, pct);
 		Intake.spin(fwd, 100, pct);}
+
+		if (Controller.ButtonL2.pressing()){
+			//eject button
+			inchdrive(-20);
+
+
+			//turn around
+			//gyroturn(-180);
+			//wait(1000 ,msec);
+		}
+
+
+		
 
 
 
