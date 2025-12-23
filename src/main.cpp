@@ -36,7 +36,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected =0;
+int AutonSelected = 0;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -237,7 +237,7 @@ void gyroturn(float target)
 void inchdrive (float inches){
 	float x = 0;
 	float error = inches - x;
-	float kp = 2.0;
+	float kp = 3.7;
 	float speed = error * kp;
 	float accuracy = 0.5; 
 	LF.resetPosition(); 
@@ -388,11 +388,11 @@ while(Gyro.isCalibrating()){
 		}
 		else if(AutonSelected == 3) { 
 			Brain.Screen.clearLine(220); 
-			Brain.Screen.printAt(1, 220, "No Auton" ); 
+			Brain.Screen.printAt(1, 220, "PID Turn Test" ); 
 		}
 		else if(AutonSelected == 4) { 
 			Brain.Screen.clearLine(220); 
-			Brain.Screen.printAt(1, 220, "No Auton" ); 
+			Brain.Screen.printAt(1, 220, "PID Drive Test" ); 
 		}
 
 }
@@ -451,13 +451,13 @@ void autonomous(void) {
 					//code 0
 					//Left Side Autonomous
 	intake();
-	inchdrive(27);
+	inchdrive(22);
 	wait(500, msec);
-	inchdrive(-15);
+	inchdrive(-10);
 	gyroturn(-80);
-	inchdrive (28);
+	inchdrive (29);
 	gyroturn (-90);
-	inchdrive (-6.5);
+	inchdrive (-8);
 	score();
 
 					break;
@@ -492,6 +492,11 @@ void autonomous(void) {
 				
 				case 3:
 					//code 3
+	gyroturn(90);
+					break;
+
+				case 4:
+	inchdrive (10);
 					break;
 		}
 
