@@ -216,7 +216,7 @@ void Display()
 void gyroturn(float target)
 {
 		float heading=0.0; //initialize a variable for heading
-		float accuracy=8.0; //how accurate to make the turn in degrees
+		float accuracy=5.0; //how accurate to make the turn in degrees
 		float error=target-heading;
 		float kp= 0.3;
 		float speed=kp*error;
@@ -237,7 +237,7 @@ void gyroturn(float target)
 void inchdrive (float inches){
 	float x = 0;
 	float error = inches - x;
-	float kp = 3.7;
+	float kp = 3.75;
 	float speed = error * kp;
 	float accuracy = 0.5; 
 	LF.resetPosition(); 
@@ -283,8 +283,9 @@ void gyroprint(){
 
 
 void intake (){ 
-	Conveyor.spin(fwd, 40, pct);
+	Conveyor.spin(fwd, 50, pct);
 	Intake.spin(fwd, 100, pct);
+	Outtake.stop();
 }
 
 void outtake (){
@@ -305,6 +306,13 @@ void stopsub3 (){
 	Intake.stop();
 }
 
+void scraperup (){
+	PneuSCRAPER.set(false);
+}
+
+void scraperdown(){
+	PneuSCRAPER.set(true);
+}
 
 void drawGUI() {
 	// Draws 2 buttons to be used for selecting auto
@@ -450,15 +458,32 @@ void autonomous(void) {
 				case 0:
 					//code 0
 					//Left Side Autonomous
+	scraperup();	
 	intake();
-	inchdrive(22);
+	inchdrive(24);
 	wait(500, msec);
-	inchdrive(-10);
+	inchdrive(-12);
 	gyroturn(-80);
 	inchdrive (29);
-	gyroturn (-90);
-	inchdrive (-8);
+	gyroturn (-92);
+	inchdrive (-7);
 	score();
+	wait(1000, msec);
+	intake();
+	scraperdown();
+	inchdrive(27.5);
+	//Wiggle in loader
+	// inchdrive(-0.75);
+	// inchdrive(0.75);
+	// wait(500, msec);
+	// inchdrive(-0.75);
+	// inchdrive(0.75);
+	wait(300,msec);
+	//back to reg
+	inchdrive(-27.5);
+	score();
+
+
 
 					break;
 				
@@ -467,9 +492,9 @@ void autonomous(void) {
 					// Right Side Autononomous
 	
 	intake();
-	inchdrive(27);
+	inchdrive(24);
 	wait(500, msec);
-	inchdrive(-15);
+	inchdrive(-12);
 	gyroturn(80);
 	inchdrive (29);
 	gyroturn (90);
@@ -618,19 +643,12 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		Outtake.spin(reverse, 0, pct);
 		Intake.spin(fwd, 100, pct);}
 
-		if (Controller.ButtonL2.pressing()){
-			//eject button
-			inchdrive(-20);
 
 
 			//turn around
 			//gyroturn(-180);
 			//wait(1000 ,msec);
-		}
-
-
 		
-
 
 
 //Scraper
@@ -648,12 +666,12 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		}
 
 
-
+	}
 
    wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
-}
+
   
 
 //
