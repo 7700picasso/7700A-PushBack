@@ -73,6 +73,14 @@ bool preAuton = true;
 // 	Brain.Screen.printAt(175, 75, "GO");
 // 	Brain.Screen.setFillColor(black);
 // }
+void OuttakeBalls(){
+
+	Intake.spin(reverse);
+	Conveyor.spin(reverse);
+	Outtake.spin(reverse);
+
+}
+
 
 // void selectAuton() {
 // 		bool selectingAuton = true;
@@ -500,8 +508,9 @@ void autonomous(void) {
 	wait(100, msec);
 	//inchdrive(-8, 1);
 	gyroturn(-60);
-	Outtake;
-	inchdrive(9, 1.5);
+	OuttakeBalls();
+
+	inchdrive(11, 1.5);
 	
 	
 	wait(1000, msec);
@@ -537,6 +546,7 @@ void autonomous(void) {
 
 				case 4:
 	// inchdrive (10);
+	OuttakeBalls();
 					break;
 		}
 
