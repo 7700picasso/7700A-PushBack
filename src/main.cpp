@@ -36,7 +36,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 0;
+int AutonSelected = 1;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -213,7 +213,7 @@ void Display()
 }
 
 
-void gyroturn(float target)
+void gyroturn(float target, double timeOut = 2)
 {
 		float heading=0.0; //initialize a variable for heading
 		float accuracy=5.0; //how accurate to make the turn in degrees
@@ -221,20 +221,21 @@ void gyroturn(float target)
 		float kp= 0.3;
 		float speed=kp*error;
 		Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
-		
-		while(fabs(error)>=accuracy)
+		double startTime = Brain.timer(seconds);
+		 		while(fabs(error)>=accuracy)
 		{
 			speed=kp*error;
 			Drive(speed, -speed, 10); //turn right at Speed
 			heading=Gyro.rotation();  //measure the heading of the robot
 			error=target-heading;  //calculate error
+			if (Brain.timer(seconds)- startTime > timeOut) break; 
 		}
 			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
 			Drive(0, 0, 0);  //stope the drive
 }
 
 
-void inchdrive (float inches){
+void inchdrive (float inches, double timeOut ){
 	float x = 0;
 	float error = inches - x;
 	float kp = 3.75;
@@ -242,12 +243,14 @@ void inchdrive (float inches){
 	float accuracy = 0.5; 
 	LF.resetPosition(); 
 	x = LF.position(rev)*3.25*0.75*M_PI; 
+	double startTime = Brain.timer(seconds);
 
 	while ( fabs(error)>= accuracy) { 
 		Drive(speed, speed, 10); 
 		x = LF.position(rev)*3.25*0.75*M_PI; 
 		error = inches - x;
 		speed = error * kp;
+		if (Brain.timer(seconds)- startTime > timeOut) break;
 
 	}
 	Drive(0,0,0); 
@@ -460,18 +463,19 @@ void autonomous(void) {
 					//Left Side Autonomous
 	scraperup();	
 	intake();
-	inchdrive(24);
+	inchdrive(24,2);//pick up trio blocks
 	wait(500, msec);
-	inchdrive(-12);
+	inchdrive(-12, 1);
 	gyroturn(-80);
-	inchdrive (29);
-	gyroturn (-92);
-	inchdrive (-7);
-	score();
+	inchdrive (29, 2);//to long goal area
+	gyroturn (-92);// turn so the back of robot faces the long goal
+	wait(250, msec);
+	inchdrive (-5.5, 1);//go to long goal
+	score();//in long goal
 	wait(1000, msec);
 	intake();
 	scraperdown();
-	inchdrive(27.5);
+	inchdrive(27, 3);//to loader
 	//Wiggle in loader
 	// inchdrive(-0.75);
 	// inchdrive(0.75);
@@ -480,7 +484,7 @@ void autonomous(void) {
 	// inchdrive(0.75);
 	wait(300,msec);
 	//back to reg
-	inchdrive(-27.5);
+	inchdrive(-27.5, 2);//score loader
 	score();
 
 
@@ -492,26 +496,37 @@ void autonomous(void) {
 					// Right Side Autononomous
 	
 	intake();
-	inchdrive(24);
-	wait(500, msec);
-	inchdrive(-12);
-	gyroturn(80);
-	inchdrive (29);
-	gyroturn (90);
-	inchdrive (-5.5);
-	score();
+	inchdrive(24, 2);
+	wait(100, msec);
+	//inchdrive(-8, 1);
+	gyroturn(-60);
+	Outtake;
+	inchdrive(9, 1.5);
+	
+	
+	wait(1000, msec);
+	
+	stopsub3 ();
+	
+	
+	
+	// gyroturn(80);
+	// inchdrive (29);
+	// gyroturn (90);
+	// inchdrive (-5.5);
+	// score();
 					break;
 				
 				case 2:
 					//code 2
 					//skills left
-	inchdrive(32);
-	gyroturn(-104);
-	inchdrive(-3.5);
-	PneuSCRAPER.set(true);
-	intake();
-	Drive(40, 40, 650); 
-	Drive(0,0,0);
+	 inchdrive(32, 3);
+	 gyroturn(-104);
+	 inchdrive(-3.5, 1);
+	 PneuSCRAPER.set(true);
+	 intake();
+	 Drive(40, 40, 650); 
+	 Drive(0,0,0);
 
 					break;
 				
@@ -521,7 +536,7 @@ void autonomous(void) {
 					break;
 
 				case 4:
-	inchdrive (10);
+	// inchdrive (10);
 					break;
 		}
 
