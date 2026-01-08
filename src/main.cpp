@@ -36,7 +36,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 2;
+int AutonSelected = 0;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -243,7 +243,7 @@ void gyroturn(float target, double timeOut = 2)
 }
 
 
-void inchdrive (float inches, double timeOut){
+void inchdrive (float inches, double timeOut ){
 	float x = 0;
 	float error = inches - x;
 	float kp = 3.75;
@@ -484,7 +484,9 @@ void autonomous(void) {
 	intake();
 	scraperdown();
 	inchdrive(27, 3);//to loader
+	
 	wait(300,msec);
+	//back to reg
 	inchdrive(-27.5, 2);//score loader
 	score();
 
@@ -522,15 +524,7 @@ void autonomous(void) {
 				case 2:
 					//code 2
 					//skills left
-	//  inchdrive(32, 3);
-	//  gyroturn(-90);
-	//  inchdrive(-3.5, 1);
-	//  PneuSCRAPER.set(true);
-	//  intake();
-	//  Drive(40, 40, 650); 
-	//  Drive(0,0,0);
-
-			scraperup();	
+					scraperup();	
 	intake();
 	inchdrive(24,2);//pick up trio blocks
 	wait(500, msec);
@@ -539,23 +533,28 @@ void autonomous(void) {
 	inchdrive (29, 2);//to long goal area
 	gyroturn (-92);// turn so the back of robot faces the long goal
 	wait(250, msec);
-	inchdrive (-6, 1);//go to long goal
+	inchdrive (-5.5, 1);//go to long goal
 	score();//in long goal
-	wait(1000, msec);
+	wait(3000, msec);
 	intake();
 	scraperdown();
 	inchdrive(27, 3);//to loader
-	wait(150,msec);//wiggle
-	inchdrive(-1, 1);
-	inchdrive(1, 1);
-	wait(150,msec);//wiggle
-	inchdrive(-1, 1);
-	inchdrive(1, 1);
-	wait(150,msec);//wiggle
-	inchdrive(-1, 1);
-	inchdrive(1, 1);
+	
+	wait(3000,msec);
+	//back to reg
 	inchdrive(-27.5, 2);//score loader
 	score();
+
+	//	intake();
+	// inchdrive(33, 3);
+	
+	// gyroturn(-101.5);
+	 //inchdrive(-3.5, 1);
+	// PneuSCRAPER.set(true);
+	 
+	// Drive(40, 40, 650); 
+	// Drive(0,0,0);
+
 					break;
 				
 				case 3:
@@ -565,7 +564,7 @@ void autonomous(void) {
 
 				case 4:
 	// inchdrive (10);
-	inchdrive (10, 1);
+	OuttakeBalls();
 					break;
 		}
 
