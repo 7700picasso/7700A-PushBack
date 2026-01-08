@@ -36,7 +36,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 1;
+int AutonSelected = 0;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -484,12 +484,7 @@ void autonomous(void) {
 	intake();
 	scraperdown();
 	inchdrive(27, 3);//to loader
-	//Wiggle in loader
-	// inchdrive(-0.75);
-	// inchdrive(0.75);
-	// wait(500, msec);
-	// inchdrive(-0.75);
-	// inchdrive(0.75);
+	
 	wait(300,msec);
 	//back to reg
 	inchdrive(-27.5, 2);//score loader
@@ -529,13 +524,36 @@ void autonomous(void) {
 				case 2:
 					//code 2
 					//skills left
-	 inchdrive(32, 3);
-	 gyroturn(-104);
-	 inchdrive(-3.5, 1);
-	 PneuSCRAPER.set(true);
-	 intake();
-	 Drive(40, 40, 650); 
-	 Drive(0,0,0);
+					scraperup();	
+	intake();
+	inchdrive(24,2);//pick up trio blocks
+	wait(500, msec);
+	inchdrive(-12, 1);
+	gyroturn(-80);
+	inchdrive (29, 2);//to long goal area
+	gyroturn (-92);// turn so the back of robot faces the long goal
+	wait(250, msec);
+	inchdrive (-5.5, 1);//go to long goal
+	score();//in long goal
+	wait(3000, msec);
+	intake();
+	scraperdown();
+	inchdrive(27, 3);//to loader
+	
+	wait(3000,msec);
+	//back to reg
+	inchdrive(-27.5, 2);//score loader
+	score();
+
+	//	intake();
+	// inchdrive(33, 3);
+	
+	// gyroturn(-101.5);
+	 //inchdrive(-3.5, 1);
+	// PneuSCRAPER.set(true);
+	 
+	// Drive(40, 40, 650); 
+	// Drive(0,0,0);
 
 					break;
 				
