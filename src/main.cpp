@@ -36,7 +36,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 0;
+int AutonSelected = 2;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -246,7 +246,7 @@ void gyroturn(float target, double timeOut = 2)
 void inchdrive (float inches, double timeOut ){
 	float x = 0;
 	float error = inches - x;
-	float kp = 3.75;
+	float kp = 3;
 	float speed = error * kp;
 	float accuracy = 0.5; 
 	LF.resetPosition(); 
@@ -478,7 +478,7 @@ void autonomous(void) {
 	inchdrive (29, 2);//to long goal area
 	gyroturn (-92);// turn so the back of robot faces the long goal
 	wait(250, msec);
-	inchdrive (-5.5, 1);//go to long goal
+	inchdrive (-6, 1);//go to long goal
 	score();//in long goal
 	wait(1000, msec);
 	intake();
@@ -529,21 +529,35 @@ void autonomous(void) {
 	inchdrive(24,2);//pick up trio blocks
 	wait(500, msec);
 	inchdrive(-12, 1);
-	gyroturn(-80);
-	inchdrive (29, 2);//to long goal area
-	gyroturn (-92);// turn so the back of robot faces the long goal
+	gyroturn(-75);
+	inchdrive (28, 2);//to long goal area
+	gyroturn (-93.5);// turn so the back of robot faces the long goal
 	wait(250, msec);
 	inchdrive (-5.5, 1);//go to long goal
 	score();//in long goal
 	wait(3000, msec);
 	intake();
 	scraperdown();
-	inchdrive(27, 3);//to loader
-	
+	inchdrive(26.5, 3);//to loader
 	wait(3000,msec);
 	//back to reg
-	inchdrive(-27.5, 2);//score loader
+	inchdrive(-2, 1);
+	scraperup();
+	gyroturn (-5);
+	inchdrive(-25, 2);//score loader
 	score();
+	wait (2000, msec);
+	stopsub3();
+	inchdrive (5.5, 1);
+	gyroturn (90);
+	inchdrive (22, 1.5);//slam into wall
+	wait (500, msec);
+	inchdrive (-40, 2);
+	gyroturn(90);
+	inchdrive (-23, 1.5);//go next to park zone
+	inchdrive (2, 1.5);
+	gyroturn (-95);
+	inchdrive(-37, 10);
 
 	//	intake();
 	// inchdrive(33, 3);
@@ -563,8 +577,7 @@ void autonomous(void) {
 					break;
 
 				case 4:
-	// inchdrive (10);
-	OuttakeBalls();
+	inchdrive (10, 2);
 					break;
 		}
 
