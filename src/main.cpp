@@ -530,20 +530,20 @@ void autonomous(void) {
 	wait(500, msec);
 	inchdrive(-12, 1);
 	gyroturn(-73);
-	inchdrive (27.5, 2);//to long goal area
+	inchdrive (28, 2);//to long goal area
 	gyroturn (-94);// turn so the back of robot faces the long goal
 	wait(250, msec);
-	inchdrive (-6, 1);//go to long goal
+	inchdrive (-7, 1);//go to long goal
 	score();//in long goal
 	wait(3000, msec);
 	intake();
 	scraperdown();
-	inchdrive(27.5, 3);//to loader
+	inchdrive(28, 3);//to loader
 	wait(3000,msec);
 	//back to reg
 	inchdrive(-2, 1);
 	scraperup();
-	inchdrive(-25, 2);//score loader
+	inchdrive(-25.5, 2);//score loader
 	score();
 	wait (2000, msec);
 	stopsub3();
@@ -553,13 +553,14 @@ void autonomous(void) {
 	wait (500, msec);
 	inchdrive (-40, 2);
 	gyroturn(-90);
-	inchdrive (25, 1.5);//go next to park zone
+	inchdrive (27, 1);//go next to park zone
 	inchdrive (-2, 1.5);
 	gyroturn (-86);
-	//inchdrive(43, 10);
-	Drive(100,50,750);
-	//	intake();
-	// inchdrive(33, 3);
+	score();
+	inchdrive(43, 10);
+	
+
+
 	
 	// gyroturn(-101.5);
 	 //inchdrive(-3.5, 1);
@@ -576,7 +577,7 @@ void autonomous(void) {
 					break;
 
 				case 4:
-	inchdrive (10, 2);
+	inchdrive(10, 2);
 					break;
 		}
 
