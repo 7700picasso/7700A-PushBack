@@ -54,10 +54,18 @@ bool preAuton = true;
     RB.spin(fwd, Rspeed, pct);
 
     wait (wt, msec);
-
-
   }
-	
+
+	void drivestop(){
+		LF.stop();
+		LB.stop();
+		RF.stop();
+		RB.stop();
+	}
+
+  
+
+
 
 // void drawGUI() {
 // 	// Draws 2 buttons to be used for selecting auto
@@ -73,13 +81,6 @@ bool preAuton = true;
 // 	Brain.Screen.printAt(175, 75, "GO");
 // 	Brain.Screen.setFillColor(black);
 // }
-void OuttakeBalls(){
-
-	Intake.spin(reverse);
-	Conveyor.spin(reverse);
-	Outtake.spin(reverse);
-
-}
 
 
 // void selectAuton() {
@@ -416,7 +417,15 @@ while(Gyro.isCalibrating()){
 
 }
 
+//descore down 
+		while (preAuton){
+			scraperdown();
+		}
+
+
 	Brain.Screen.clearScreen(); 
+
+
 }
 
 		
@@ -503,7 +512,7 @@ void autonomous(void) {
 	wait(100, msec);
 	//inchdrive(-8, 1);
 	gyroturn(-60);
-	OuttakeBalls();
+	outtake();
 
 	inchdrive(11, 1.5);
 	
@@ -524,40 +533,48 @@ void autonomous(void) {
 				case 2:
 					//code 2
 					//skills left
-					scraperup();	
+	scraperup();	
 	intake();
 	inchdrive(24,2);//pick up trio blocks
 	wait(500, msec);
 	inchdrive(-12, 1);
 	gyroturn(-73);
-	inchdrive (28, 2);//to long goal area
-	gyroturn (-94);// turn so the back of robot faces the long goal
+	inchdrive (27.5, 2);//to long goal area
+	gyroturn (-100);// turn so the back of robot faces the long goal
 	wait(250, msec);
 	inchdrive (-7, 1);//go to long goal
 	score();//in long goal
 	wait(3000, msec);
 	intake();
 	scraperdown();
-	inchdrive(28, 3);//to loader
-	wait(3000,msec);
-	//back to reg
+	Drive(100, 100, 10);//to loader
+	wait(1000, msec);
+	drivestop();
+	inchdrive (-0.25, 2);//wiggle
+	wait(3000, msec);
 	inchdrive(-2, 1);
 	scraperup();
+	gyroturn (-25);//to long goal
 	inchdrive(-25.5, 2);//score loader
 	score();
 	wait (2000, msec);
 	stopsub3();
 	inchdrive (5.5, 1);
 	gyroturn (90);
-	inchdrive (22, 1.5);//slam into wall
+	inchdrive (25, 1.5);//slam into wall
 	wait (500, msec);
-	inchdrive (-40, 2);
-	gyroturn(-90);
-	inchdrive (27, 1);//go next to park zone
-	inchdrive (-2, 1.5);
-	gyroturn (-86);
+	inchdrive(-60, 5);	//front of park zone
+	gyroturn (-100); //face park zone
 	score();
-	inchdrive(43, 10);
+	Drive(100, 100, 10);
+
+	// inchdrive (-40, 2); //go next to park zone
+	// gyroturn(-90);
+	// inchdrive (30, 1);
+	// inchdrive (-2, 1.5);
+	// gyroturn (-86);
+	// score();
+	// inchdrive(43, 10);
 	
 
 
