@@ -547,15 +547,13 @@ void autonomous(void) {
 	wait(3000, msec);
 	intake();
 	scraperdown();
-	Drive(100, 100, 10);//to loader
+	Drive(80, 80, 10);//to loader
 	wait(1000, msec);
 	drivestop();
-	inchdrive (-0.25, 2);//wiggle
 	wait(3000, msec);
 	inchdrive(-2, 1);
 	scraperup();
-	gyroturn (-25);//to long goal
-	inchdrive(-25.5, 2);//score loader
+	inchdrive(-25.5, 2);//to long goal
 	score();
 	wait (2000, msec);
 	stopsub3();
