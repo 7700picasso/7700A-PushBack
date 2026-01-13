@@ -547,8 +547,8 @@ void autonomous(void) {
 	wait(3000, msec);
 	intake();
 	scraperdown();
-	Drive(80, 80, 10);//to loader
-	wait(1000, msec);
+	Drive(50, 50, 10);//to loader
+	wait(1500, msec);
 	drivestop();
 	wait(3000, msec);
 	inchdrive(-2, 1);
@@ -557,7 +557,6 @@ void autonomous(void) {
 	score();
 	wait (2000, msec);
 	stopsub3();
-	inchdrive (5.5, 1);
 	gyroturn (90);
 	inchdrive (25, 1.5);//slam into wall
 	wait (500, msec);
