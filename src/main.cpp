@@ -419,7 +419,7 @@ while(Gyro.isCalibrating()){
 
 //descore down 
 		while (preAuton){
-			scraperdown();
+			PneuDESCORE.set(true);
 		}
 
 
