@@ -388,6 +388,7 @@ while(Gyro.isCalibrating()){
 		drawGUI(); 
 		Brain.Screen.pressed(selectAuton);
 
+		PneuDESCORE.set(true);
 
 // Print which code for selection screen
 		while (preAuton){ 
@@ -418,9 +419,8 @@ while(Gyro.isCalibrating()){
 }
 
 //descore down 
-		while (preAuton){
-			PneuDESCORE.set(true);
-		}
+			
+
 
 
 	Brain.Screen.clearScreen(); 
