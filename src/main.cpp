@@ -737,7 +737,7 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		}
 
 
-	}
+	
 	if (Controller.ButtonUp.pressing()) {
 			PneuSCRAPER.set(true);
 		} else if (Controller.ButtonRight.pressing()) {
@@ -748,7 +748,7 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
                     // prevent wasted resources.
   }
 
-  
+}
 
 //
 // Main will set up the competition functions and callbacks.
