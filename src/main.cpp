@@ -21,8 +21,9 @@ motor Outtake (PORT12, ratio6_1, true);
 
 inertial Gyro = inertial(PORT6);
 
-digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.A);
-digital_out PneuDESCORE = digital_out(Brain.ThreeWirePort.B);
+digital_out PneuFLAP = digital_out(Brain.ThreeWirePort.A); //Flap, I changed the scraper controls, now the controls for the scraper are the controls for the Flap
+digital_out PneuDESCORE = digital_out(Brain.ThreeWirePort.B); //Descorer
+digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.D); //Scraper
 
 controller Controller;
 
@@ -721,11 +722,11 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 		
 
 
-//Scraper
+//Flap
 	if (Controller.ButtonY.pressing()) {
-			PneuSCRAPER.set(true);
+			PneuFLAP.set(true);
 		} else if (Controller.ButtonX.pressing()) {
-			PneuSCRAPER.set(false);
+			PneuFLAP.set(false);
 		}
 
 //Descore
@@ -737,6 +738,11 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 
 
 	}
+	if (Controller.ButtonUp.pressing()) {
+			PneuSCRAPER.set(true);
+		} else if (Controller.ButtonRight.pressing()) {
+			PneuSCRAPER.set(false);
+		}
 
    wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
