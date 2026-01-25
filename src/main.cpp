@@ -21,7 +21,8 @@ motor Outtake (PORT12, ratio6_1, true);
 
 inertial Gyro = inertial(PORT6);
 
-digital_out PneuFLAP = digital_out(Brain.ThreeWirePort.A); //Flap, I changed the scraper controls, now the controls for the scraper are the controls for the Flap
+digital_out PneuALIGNER = digital_out(Brain.ThreeWirePort.C); //Aligner
+digital_out PneuGOAlFLAP = digital_out(Brain.ThreeWirePort.A); //Flap
 digital_out PneuDESCORE = digital_out(Brain.ThreeWirePort.B); //Descorer
 digital_out PneuSCRAPER = digital_out(Brain.ThreeWirePort.D); //Scraper
 
@@ -31,6 +32,8 @@ controller Controller;
 |*                          Pre-Autonomous Functions                         *|
 \*---------------------------------------------------------------------------*/
  
+//set neccesary variables
+
 float pi = 3.14;
 float wheeld = 3.25;
 float wheelr = wheeld / 2;
@@ -47,6 +50,13 @@ int AutonMax = 4;
  
 bool preAuton = true; 
  
+
+
+
+
+//drive/turn commands
+
+
   void Drive(int Lspeed, int Rspeed, int wt){
     
     LF.spin(fwd, Lspeed, pct);
@@ -67,55 +77,62 @@ bool preAuton = true;
   
 
 
+void gyroturn(float target, double timeOut = 2)
+{
+		float heading=0.0; //initialize a variable for heading
+		float accuracy=5.0; //how accurate to make the turn in degrees
+		float error=target-heading;
+		float kp= 0.3;
+		float speed=kp*error;
+		Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
+		double startTime = Brain.timer(seconds);
+		 		while(fabs(error)>=accuracy)
+		{
+			speed=kp*error;
+			Drive(speed, -speed, 10); //turn right at Speed
+			heading=Gyro.rotation();  //measure the heading of the robot
+			error=target-heading;  //calculate error
+			if (Brain.timer(seconds)- startTime > timeOut) break; 
+		}
+			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
+			Drive(0, 0, 0);  //stope the drive
+}
 
-// void drawGUI() {
-// 	// Draws 2 buttons to be used for selecting auto
-// 	Brain.Screen.clearScreen();
-// 	Brain.Screen.printAt(1, 40, "Select Auton then Press Go");
-// 	Brain.Screen.printAt(1, 200, "Auton Selected =  %d   ", autoselected);
-// 	Brain.Screen.setFillColor(red);
-// 	Brain.Screen.drawRectangle(20, 50, 100, 100);
-// 	Brain.Screen.drawCircle(300, 75, 25);
-// 	Brain.Screen.printAt(25, 75, "Select");
-// 	Brain.Screen.setFillColor(green);
-// 	Brain.Screen.drawRectangle(170, 50, 100, 100);
-// 	Brain.Screen.printAt(175, 75, "GO");
-// 	Brain.Screen.setFillColor(black);
-// }
+
+void inchdrive (float inches, double timeOut ){
+	float x = 0;
+	float error = inches - x;
+	float kp = 3;
+	float speed = error * kp;
+	float accuracy = 0.5; 
+	LF.resetPosition(); 
+	x = LF.position(rev)*3.25*0.75*M_PI; 
+	double startTime = Brain.timer(seconds);
+
+	while ( fabs(error)>= accuracy) { 
+		Drive(speed, speed, 10); 
+		x = LF.position(rev)*3.25*0.75*M_PI; 
+		error = inches - x;
+		speed = error * kp;
+		if (Brain.timer(seconds)- startTime > timeOut) break;
+
+	}
+	Drive(0,0,0); 
+
+}
 
 
-// void selectAuton() {
-// 		bool selectingAuton = true;
-		
-// 		int x = Brain.Screen.xPosition(); // get the x position of last touch of the screen
-// 		int y = Brain.Screen.yPosition(); // get the y position of last touch of the screen
-		
-// 		// check to see if buttons were pressed
-// 		if (x >= 20 && x <= 120 && y >= 50 && y <= 150){ // select button pressed
-// 				autoselected++;
-// 				if (autoselected > autonmax){
-// 						autoselected = autonmin; // rollover
-// 				}
-// 				Brain.Screen.printAt(1, 200, "Auton Selected =  %d   ", autoselected);
-// 		}
-		
-		
-// 		if (x >= 170 && x <= 270 && y >= 50 && y <= 150) {
-// 				selectingAuton = false; // GO button pressed
-// 				Brain.Screen.printAt(1, 200, "Auton  =  %d   GO           ", autoselected);
-// 		}
-		
-// 		if (!selectingAuton) {
-// 				Brain.Screen.setFillColor(green);
-// 				Brain.Screen.drawCircle(300, 75, 25);
-// 		} else {
-// 				Brain.Screen.setFillColor(red);
-// 				Brain.Screen.drawCircle(300, 75, 25);
-// 		}
-		
-// 		wait(10, msec); // slow it down
-// 		Brain.Screen.setFillColor(black);
-// }
+
+
+
+
+
+
+//Display/motor monitor stuff past here
+
+
+
+
 
   double YOFFSET = 20; //offset for the display
 //Writes a line for the diagnostics of a motor on the Brain
@@ -223,77 +240,23 @@ void Display()
 }
 
 
-void gyroturn(float target, double timeOut = 2)
-{
-		float heading=0.0; //initialize a variable for heading
-		float accuracy=5.0; //how accurate to make the turn in degrees
-		float error=target-heading;
-		float kp= 0.3;
-		float speed=kp*error;
-		Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
-		double startTime = Brain.timer(seconds);
-		 		while(fabs(error)>=accuracy)
-		{
-			speed=kp*error;
-			Drive(speed, -speed, 10); //turn right at Speed
-			heading=Gyro.rotation();  //measure the heading of the robot
-			error=target-heading;  //calculate error
-			if (Brain.timer(seconds)- startTime > timeOut) break; 
-		}
-			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
-			Drive(0, 0, 0);  //stope the drive
-}
-
-
-void inchdrive (float inches, double timeOut ){
-	float x = 0;
-	float error = inches - x;
-	float kp = 3;
-	float speed = error * kp;
-	float accuracy = 0.5; 
-	LF.resetPosition(); 
-	x = LF.position(rev)*3.25*0.75*M_PI; 
-	double startTime = Brain.timer(seconds);
-
-	while ( fabs(error)>= accuracy) { 
-		Drive(speed, speed, 10); 
-		x = LF.position(rev)*3.25*0.75*M_PI; 
-		error = inches - x;
-		speed = error * kp;
-		if (Brain.timer(seconds)- startTime > timeOut) break;
-
-	}
-	Drive(0,0,0); 
-
-}
-
-
-// void gyroturn (float target) {
-// 	float heading = 0.0;
-// 	float accuracy = 3.0;
-// 	float error = target - heading;
-// 	float kp = 0.4;
-// 	float speed = kp * error;
-// 	Gyro.setRotation(0.0, degrees);
-
-// 	while (fabs(error) >= accuracy){
-// 		speed = kp * error;
-// 		Drive(speed, -speed, 10);
-// 		heading = Gyro.rotation();
-// 		error = target - heading;
-// 	}
-
-// 	Drive(0,0,0);
-
-// }
-
-
 void gyroprint(){
 	float rotation = Gyro.rotation (deg);
 	Brain.Screen.printAt(1, 60, "Rotation = %.2f.degrees", rotation);
 }
 
 
+
+
+
+
+
+
+//subsystem 3 functions
+
+
+
+//scoring, intake and conveyor
 
 void intake (){ 
 	Conveyor.spin(fwd, 50, pct);
@@ -313,11 +276,13 @@ void score (){
 	Intake.spin(fwd, 100, pct);
 }
 
-void stopsub3 (){
+void stopscore (){
 	Conveyor.stop();
 	Outtake.stop();
 	Intake.stop();
 }
+
+//individual pneumatic functions
 
 void scraperup (){
 	PneuSCRAPER.set(false);
@@ -326,6 +291,47 @@ void scraperup (){
 void scraperdown(){
 	PneuSCRAPER.set(true);
 }
+
+void descoreup(){
+	PneuDESCORE.set(false);
+}
+
+void descoredown(){
+	PneuDESCORE.set(true);
+}
+
+void goalflapup(){
+	PneuGOAlFLAP.set(false);
+}
+
+void goalflapdown(){
+	PneuGOAlFLAP.set(true);
+}
+
+void alignerup(){
+	PneuALIGNER.set(false);
+}
+
+void alignerdown(){
+	PneuALIGNER.set(true);
+}
+
+//Pneumatic toggle commands (pt stands for pneumatic toggle)
+
+void ptretractall(){
+	scraperup();
+	descoredown();
+	goalflapup();
+	alignerdown();
+}
+
+
+
+
+
+//preauton gui/selection etc.
+
+
 
 void drawGUI() {
 	// Draws 2 buttons to be used for selecting auto
@@ -376,7 +382,8 @@ void selectAuton() {
 		wait(10, msec); // slow it down
 		Brain.Screen.setFillColor(black);
 }
-/*---------------------------------------------------------------------------*/
+
+
 
 void pre_auton(void) {
 
@@ -520,7 +527,7 @@ void autonomous(void) {
 	
 	wait(1000, msec);
 	
-	stopsub3 ();
+	stopscore ();
 	
 	
 	
@@ -557,7 +564,7 @@ void autonomous(void) {
 	inchdrive(-25.5, 2);//to long goal
 	score();
 	wait (2000, msec);
-	stopsub3();
+	stopscore();
 	gyroturn (90);
 	inchdrive (25, 1.5);//slam into wall
 	wait (500, msec);
@@ -688,31 +695,24 @@ Display ();
 	//y=6x+5 + |!-5357|
 
 
-//Scoring and intake
+//Scoring
 
 if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
-		Outtake.spin(fwd, 100, pct); 
-		Conveyor.spin(fwd, 90, pct);
-		Intake.spin(fwd, 100, pct);
+		score();
 		}
 
-
 	else if (Controller.ButtonR2.pressing()){	//Outtake (everything rev)
-		Outtake.spin(reverse, 100, pct);
-		Conveyor.spin(reverse, 100, pct);
-		Intake.spin(reverse, 100, pct);
+		outtake();
 	}
 
 	else { // else stop all
-		Outtake.stop();
-		Conveyor.stop();
-		Intake.stop();
+		stopscore();
 	}
 
-	 if (Controller.ButtonL1.pressing()){  //Intakeing (outake) 
-		Conveyor.spin(fwd, 100, pct);
-		Outtake.spin(reverse, 0, pct);
-		Intake.spin(fwd, 100, pct);}
+
+if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop) 
+	intake();
+}
 
 
 
@@ -724,24 +724,24 @@ if (Controller.ButtonR1.pressing()){  //Scoring (all motors spinning fwd)
 
 //Flap
 	if (Controller.ButtonY.pressing()) {
-			PneuFLAP.set(true);
+			goalflapdown();
 		} else if (Controller.ButtonX.pressing()) {
-			PneuFLAP.set(false);
+			goalflapup();
 		}
 
 //Descore
 	if (Controller.ButtonB.pressing()) {
-			PneuDESCORE.set(true);
+			descoredown();
 		} else if (Controller.ButtonA.pressing()) {
-			PneuDESCORE.set(false);
+			descoreup();
 		}
 
 
 	
 	if (Controller.ButtonUp.pressing()) {
-			PneuSCRAPER.set(true);
+			scraperup();
 		} else if (Controller.ButtonRight.pressing()) {
-			PneuSCRAPER.set(false);
+			scraperdown();
 		}
 
    wait(20, msec); // Sleep the task for a short amount of time to
