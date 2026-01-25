@@ -285,11 +285,11 @@ void stopscore (){
 //individual pneumatic functions
 
 void scraperup (){
-	PneuSCRAPER.set(false);
+	PneuSCRAPER.set(true);
 }
 
 void scraperdown(){
-	PneuSCRAPER.set(true);
+	PneuSCRAPER.set(false);
 }
 
 void descoreup(){
@@ -386,6 +386,8 @@ void selectAuton() {
 
 
 void pre_auton(void) {
+
+ptretractall();
 
 while(Gyro.isCalibrating()){
 	wait(20, msec); 
@@ -722,7 +724,7 @@ if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop)
 		
 
 
-//Flap
+//Flap (for middle/long goal switching)
 	if (Controller.ButtonY.pressing()) {
 			goalflapdown();
 		} else if (Controller.ButtonX.pressing()) {
