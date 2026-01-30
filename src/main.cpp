@@ -11,9 +11,11 @@ competition Competition;
 brain Brain;
 
 motor LF (PORT10, ratio6_1, true);
-motor LB(PORT18, ratio6_1, true);
+motor LM(PORT18, ratio6_1, true);
+motor LB(PORT1, ratio6_1, true);
 motor RF(PORT14, ratio6_1, false);
-motor RB(PORT20, ratio6_1, false);
+motor RM(PORT20, ratio6_1, false);
+motor RB(PORT2, ratio6_1, false);
 
 motor Intake(PORT13, ratio18_1, false);
 motor Conveyor(PORT16, ratio6_1, true);
@@ -60,8 +62,10 @@ bool preAuton = true;
   void Drive(int Lspeed, int Rspeed, int wt){
     
     LF.spin(fwd, Lspeed, pct);
+	LM.spin(fwd, Lspeed, pct);
     LB.spin(fwd, Lspeed, pct);
     RF.spin(fwd, Rspeed, pct);
+	RM.spin(fwd, Rspeed, pct);
     RB.spin(fwd, Rspeed, pct);
 
     wait (wt, msec);
@@ -69,8 +73,10 @@ bool preAuton = true;
 
 	void drivestop(){
 		LF.stop();
+		LM.stop();
 		LB.stop();
 		RF.stop();
+		RM.stop();
 		RB.stop();
 	}
 
@@ -316,16 +322,53 @@ void alignerdown(){
 	PneuALIGNER.set(true);
 }
 
-//Pneumatic toggle commands (pt stands for pneumatic toggle)
+//Pneumatic logic commands (pt stands for pneumatic logic)
 
-void ptretractall(){
+void plretractall(){
 	scraperup();
 	descoredown();
 	goalflapup();
 	alignerdown();
 }
 
+void plscraperdown(){
+	scraperdown();
+	goalflapup();
+	alignerdown();
+}
 
+
+void plalignerup(){
+	scraperup();
+	alignerup();
+}
+
+
+void plalignerdown(){
+	scraperup();
+	alignerdown();
+}
+
+void plgoalflapup(){
+	scraperup();
+	goalflapup();
+}
+
+void plgoalflapdown(){
+	scraperup();
+	goalflapdown();
+}
+
+
+//Penumatic Toggle commands (pt for penumatic toggle)
+
+void ptscraper(){
+	plscraperdown();
+}
+
+void ptaligner(){
+
+}
 
 
 
@@ -383,11 +426,16 @@ void selectAuton() {
 		Brain.Screen.setFillColor(black);
 }
 
+ 
+
+
+
+
 
 
 void pre_auton(void) {
 
-ptretractall();
+plretractall();
 
 while(Gyro.isCalibrating()){
 	wait(20, msec); 
