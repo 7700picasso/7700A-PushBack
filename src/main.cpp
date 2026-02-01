@@ -10,12 +10,12 @@ competition Competition;
 // define your global instances of motors and other devices here
 brain Brain;
 
-motor LM (PORT10, ratio6_1, true);
+motor LM(PORT10, ratio6_1, true);
 motor LB(PORT18, ratio6_1, true);
-motor LF(PORT19, ratio6_1, true);
+motor LF(PORT15, ratio6_1, true);
 motor RM(PORT14, ratio6_1, false);
 motor RB(PORT20, ratio6_1, false);
-motor RF(PORT15, ratio6_1, false);
+motor RF(PORT21, ratio6_1, false);
 
 motor Intake(PORT13, ratio18_1, false);
 motor Conveyor(PORT16, ratio6_1, true);
