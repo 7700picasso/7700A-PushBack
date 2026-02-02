@@ -322,7 +322,8 @@ void alignerdown(){
 	PneuALIGNER.set(true);
 }
 
-//Pneumatic logic commands (pt stands for pneumatic logic)
+
+//Pneumatic logic commands (pl stands for pneumatic logic)
 
 void plretractall(){
 	scraperup();
@@ -331,43 +332,52 @@ void plretractall(){
 	alignerdown();
 }
 
-void plscraperdown(){
-	scraperdown();
-	goalflapup();
-	alignerdown();
+void plscraper(){
+	if (PneuSCRAPER.value() == true) {
+		scraperdown();
+		goalflapup();
+		alignerdown();
+		wait(200, msec);
+	}
+	else{
+		scraperup();
+		wait(200, msec);
+	}
 }
 
-
-void plalignerup(){
-	scraperup();
-	alignerup();
+void plaligner(){
+	if (PneuALIGNER.value() == true) {
+		scraperup();
+		alignerup();
+		wait(200, msec);
+	}
+	else{
+		alignerdown();
+		wait(200, msec);
+	}
 }
 
-
-void plalignerdown(){
-	scraperup();
-	alignerdown();
+void plgoalflap(){
+	if (PneuGOAlFLAP.value() == false) {
+		scraperup();
+		goalflapdown();
+		wait(200, msec);
+	}
+	else{
+		goalflapup();
+		wait(200, msec);
+	}
 }
 
-void plgoalflapup(){
-	scraperup();
-	goalflapup();
-}
-
-void plgoalflapdown(){
-	scraperup();
-	goalflapdown();
-}
-
-
-//Penumatic Toggle commands (pt for penumatic toggle)
-
-void ptscraper(){
-	plscraperdown();
-}
-
-void ptaligner(){
-
+void pldescore(){
+	if (PneuDESCORE.value() == true) {
+		descoreup();
+		wait(200, msec);
+	}
+	else{
+		descoredown();
+		wait(200, msec);
+	}
 }
 
 
@@ -772,26 +782,25 @@ if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop)
 		
 
 
-//Flap (for middle/long goal switching)
+//Pneumatics
+
 	if (Controller.ButtonY.pressing()) {
-			goalflapdown();
-		} else if (Controller.ButtonX.pressing()) {
-			goalflapup();
+			plaligner();
+		} 
+
+	if (Controller.ButtonX.pressing()) {
+			pldescore();
 		}
 
-//Descore
 	if (Controller.ButtonB.pressing()) {
-			descoredown();
-		} else if (Controller.ButtonA.pressing()) {
-			descoreup();
+			plgoalflap();
+	}
+	if (Controller.ButtonA.pressing()) { //
+			plscraper();
 		}
-
-
 	
-	if (Controller.ButtonUp.pressing()) {
-			scraperup();
-		} else if (Controller.ButtonRight.pressing()) {
-			scraperdown();
+	if (Controller.ButtonUp.pressing()) { //
+			plretractall();
 		}
 
    wait(20, msec); // Sleep the task for a short amount of time to
@@ -799,6 +808,7 @@ if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop)
   }
 
 }
+
 
 //
 // Main will set up the competition functions and callbacks.
@@ -810,7 +820,7 @@ int main() {
 
   // Run the pre-autonomous function.
   pre_auton();
-
+Brain.Screen.clearScreen();
   // Prevent main from exiting with an infinite loop.
   while (true) {
     wait(100, msec);
