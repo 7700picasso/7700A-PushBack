@@ -799,6 +799,8 @@ if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop)
 			plscraper();
 		}
 	
+
+	//Manual Retract All
 	if (Controller.ButtonL2.pressing()) {
 			plretractall();
 		}
