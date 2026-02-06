@@ -787,7 +787,7 @@ if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop)
 //Pneumatics
 
 	if (Controller.ButtonUp.pressing()) {
-			plaligner();
+			plgoalflap();
 		} 
 
 	if (Controller.ButtonX.pressing()) {
@@ -795,7 +795,7 @@ if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop)
 		}
 
 	if (Controller.ButtonLeft.pressing()) {
-			plgoalflap();
+			plaligner();
 	}
 	if (Controller.ButtonA.pressing()) {
 			plscraper();
