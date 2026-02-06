@@ -61,12 +61,14 @@ bool preAuton = true;
 
   void Drive(int Lspeed, int Rspeed, int wt){
     
-    LF.spin(fwd, Lspeed, pct);
-	LM.spin(fwd, Lspeed, pct);
-    LB.spin(fwd, Lspeed, pct);
-    RF.spin(fwd, Rspeed, pct);
-	RM.spin(fwd, Rspeed, pct);
-    RB.spin(fwd, Rspeed, pct);
+	int klimiter = 1.1;
+
+    LF.spin(fwd, Lspeed/klimiter, pct);
+	LM.spin(fwd, Lspeed/klimiter, pct);
+    LB.spin(fwd, Lspeed/klimiter, pct);
+    RF.spin(fwd, Rspeed/klimiter, pct);
+	RM.spin(fwd, Rspeed/klimiter, pct);
+    RB.spin(fwd, Rspeed/klimiter, pct);
 
     wait (wt, msec);
   }
