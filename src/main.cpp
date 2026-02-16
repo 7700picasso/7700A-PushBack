@@ -42,7 +42,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 2;
+int AutonSelected = 0;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -548,26 +548,42 @@ void autonomous(void) {
 				case 0:
 					//code 0
 					//Left Side Autonomous
-	scraperup();	
+	// scraperup();	
+	// intake();
+	// inchdrive(24,2);//pick up trio blocks
+	// wait(500, msec);
+	// inchdrive(-12, 1);
+	// gyroturn(-80);
+	// inchdrive (29, 2);//to long goal area
+	// gyroturn (-92);// turn so the back of robot faces the long goal
+	// wait(250, msec);
+	// inchdrive (-6, 1);//go to long goal
+	// score();//in long goal
+	// wait(1000, msec);
+	// intake();
+	// scraperdown();
+	// inchdrive(27, 3);//to loader
+	
+	// wait(300,msec);
+	// //back to reg
+	// inchdrive(-27.5, 2);//score loader
+	// score();
+
+	//middle scoring idea
 	intake();
 	inchdrive(24,2);//pick up trio blocks
 	wait(500, msec);
-	inchdrive(-12, 1);
-	gyroturn(-80);
-	inchdrive (29, 2);//to long goal area
-	gyroturn (-92);// turn so the back of robot faces the long goal
-	wait(250, msec);
-	inchdrive (-6, 1);//go to long goal
-	score();//in long goal
-	wait(1000, msec);
-	intake();
-	scraperdown();
-	inchdrive(27, 3);//to loader
-	
-	wait(300,msec);
-	//back to reg
-	inchdrive(-27.5, 2);//score loader
+	inchdrive(5,1);
+	gyroturn(-110);
+	plgoalflap();
+	inchdrive(-15, 3);
 	score();
+	wait(2000, msec);
+	intake();
+	inchdrive(43, 3);
+	gyroturn(-50);
+	plscraper();
+	inchdrive(25, 1);
 
 
 
