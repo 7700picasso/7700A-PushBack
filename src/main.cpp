@@ -88,19 +88,20 @@ bool preAuton = true;
 void gyroturn(float target, double timeOut = 2)
 {
 		float heading=0.0; //initialize a variable for heading
-		float accuracy=5.0; //how accurate to make the turn in degrees
+		float accuracy=2.0; //how accurate to make the turn in degrees
 		float error=target-heading;
 		float kp= 0.3;
 		float speed=kp*error;
-		Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
+		// Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
 		double startTime = Brain.timer(seconds);
-		 		while(fabs(error)>=accuracy)
-		{
+
+		while(fabs(error)>=accuracy){
 			speed=kp*error;
 			Drive(speed, -speed, 10); //turn right at Speed
 			heading=Gyro.rotation();  //measure the heading of the robot
 			error=target-heading;  //calculate error
 			if (Brain.timer(seconds)- startTime > timeOut) break; 
+			
 		}
 			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
 			Drive(0, 0, 0);  //stope the drive
@@ -550,10 +551,12 @@ void autonomous(void) {
 					//Left Side Autonomous
 	// scraperup();	
 	// intake();
+	// inchdrive(1,1);//leave park zone contact
+	// gyroturn(-20);
 	// inchdrive(24,2);//pick up trio blocks
 	// wait(500, msec);
 	// inchdrive(-12, 1);
-	// gyroturn(-80);
+	// gyroturn(-135);
 	// inchdrive (29, 2);//to long goal area
 	// gyroturn (-92);// turn so the back of robot faces the long goal
 	// wait(250, msec);
@@ -569,21 +572,30 @@ void autonomous(void) {
 	// inchdrive(-27.5, 2);//score loader
 	// score();
 
-	//middle scoring idea
+	//middle scoring idea.// left-jason
+	scraperup();	
 	intake();
-	inchdrive(24,2);//pick up trio blocks
+	inchdrive(1, 1);//leave park zone contact
+	gyroturn(-25);
+	inchdrive(25, 2);//pick up trio blocks
+	//inchdrive(-1, 1);//back up a little bit
 	wait(500, msec);
-	inchdrive(5,1);
-	gyroturn(-110);
+	gyroturn(-135);//turn to middle goal
 	plgoalflap();
-	inchdrive(-15, 3);
+	inchdrive(-15, 2);//to middle goal
 	score();
-	wait(2000, msec);
-	intake();
-	inchdrive(43, 3);
-	gyroturn(-50);
+	wait(2000, msec);//at middle goal
+	intake();//stop outtake roller
 	plscraper();
-	inchdrive(25, 1);
+	inchdrive(50, 3);//to loader area
+	gyroturn(-180);//turn to face loader
+	inchdrive(10, 1);
+	wait(750, msec);
+	inchdrive(-5, 1);//exit loader
+	plaligner();
+	inchdrive(-35, 3);//to long goal
+	score();
+
 
 
 
@@ -592,23 +604,18 @@ void autonomous(void) {
 				case 1:
 					//code 1
 					// Right Side Autononomous
-	
+	scraperup();
+	inchdrive(30, 2);
+	wait(500, msec);
+	gyroturn(90);
+	scraperdown();
 	intake();
-	inchdrive(24, 2);
-	wait(100, msec);
-	//inchdrive(-8, 1);
-	gyroturn(-60);
-	outtake();
-
-	inchdrive(11, 1.5);
-	
-	
-	wait(1000, msec);
-	
-	stopscore ();
-	
-	
-	
+	inchdrive(10, 2.5);
+	wait (500, msec);
+	Intake.stop();
+	alignerup();
+	inchdrive(-25, 2);
+	score();
 	// gyroturn(80);
 	// inchdrive (29);
 	// gyroturn (90);
