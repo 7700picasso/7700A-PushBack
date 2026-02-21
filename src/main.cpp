@@ -318,11 +318,11 @@ void goalflapdown(){
 }
 
 void alignerup(){
-	PneuALIGNER.set(false);
+	PneuALIGNER.set(true);
 }
 
 void alignerdown(){
-	PneuALIGNER.set(true);
+	PneuALIGNER.set(false);
 }
 
 
@@ -332,18 +332,19 @@ void plretractall(){
 	scraperup();
 	descoredown();
 	goalflapup();
-	alignerdown();
+	alignerup();
 }
 
 void plscraper(){
 	if (PneuSCRAPER.value() == true) {
 		scraperdown();
 		goalflapup();
-		alignerdown();
+		alignerup();
 		wait(200, msec);
 	}
 	else{
 		scraperup();
+		alignerdown();
 		wait(200, msec);
 	}
 }
@@ -517,7 +518,7 @@ while(Gyro.isCalibrating()){
 
 
 void autonomous(void) {
-
+alignerdown();
 // //left side Autonomous
 // 	IntakeBalls(); 
 // 	inchdrive(28);
@@ -575,25 +576,23 @@ void autonomous(void) {
 	//middle scoring idea.// left-jason
 	scraperup();	
 	intake();
-	inchdrive(1, 1);//leave park zone contact
 	gyroturn(-25);
 	inchdrive(25, 2);//pick up trio blocks
 	//inchdrive(-1, 1);//back up a little bit
-	wait(500, msec);
+	wait(250, msec);
 	gyroturn(-135);//turn to middle goal
 	plgoalflap();
 	inchdrive(-15, 2);//to middle goal
 	score();
-	wait(2000, msec);//at middle goal
+	wait(1000, msec);//at middle goal
 	intake();//stop outtake roller
 	plscraper();
-	inchdrive(50, 3);//to loader area
+	inchdrive(48, 3);//to loader area
 	gyroturn(-180);//turn to face loader
-	inchdrive(10, 1);
+	inchdrive(12, 1.5);
 	wait(750, msec);
 	inchdrive(-5, 1);//exit loader
-	plaligner();
-	inchdrive(-35, 3);//to long goal
+	inchdrive(-23, 3);//to long goal
 	score();
 
 
@@ -760,6 +759,8 @@ void autonomous(void) {
 \*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
+plretractall();
+alignerdown();
 Brain.Screen.clearScreen(); 
 
 
@@ -817,9 +818,6 @@ if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop)
 			pldescore();
 		}
 
-	if (Controller.ButtonLeft.pressing()) {
-			plaligner();
-	}
 	if (Controller.ButtonA.pressing()) {
 			plscraper();
 		}
