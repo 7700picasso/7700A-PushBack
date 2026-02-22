@@ -137,6 +137,128 @@ void inchdrive (float inches, double timeOut ){
 
 
 
+
+
+
+
+//subsystem 3 functions
+
+
+
+//scoring, intake and conveyor
+
+void intake (){ 
+	Conveyor.spin(fwd, 50, pct);
+	Intake.spin(fwd, 100, pct);
+	Outtake.stop();
+}
+
+void outtake (){
+	Conveyor.spin(reverse, 100, pct);
+	Outtake.spin(reverse, 100, pct);
+	Intake.spin(reverse, 100, pct);
+}
+
+void score (){
+	Conveyor.spin(fwd, 100, pct);
+	Outtake.spin(fwd, 100, pct);
+	Intake.spin(fwd, 100, pct);
+}
+
+void stopscore (){
+	Conveyor.stop();
+	Outtake.stop();
+	Intake.stop();
+}
+
+//individual pneumatic functions
+
+void scraperup (){
+	PneuSCRAPER.set(true);
+}
+
+void scraperdown(){
+	PneuSCRAPER.set(false);
+}
+
+void descoreup(){
+	PneuDESCORE.set(false);
+}
+
+void descoredown(){
+	PneuDESCORE.set(true);
+}
+
+void goalflapup(){
+	PneuGOAlFLAP.set(false);
+}
+
+void goalflapdown(){
+	PneuGOAlFLAP.set(true);
+}
+
+void alignerup(){
+	PneuALIGNER.set(true);
+}
+
+void alignerdown(){
+	PneuALIGNER.set(false);
+}
+
+
+//Pneumatic logic commands (pl stands for pneumatic logic)
+
+void plretractall(){
+	scraperup();
+	descoredown();
+	goalflapup();
+	alignerup();
+}
+
+void plscraper(){
+	if (PneuSCRAPER.value() == true) {
+		scraperdown();
+		goalflapup();
+		alignerup();
+	}
+	else{
+		scraperup();
+		alignerdown();
+	}
+}
+
+// void plaligner(){
+// 	if (PneuALIGNER.value() == true) {
+// 		scraperup();
+// 		alignerup();
+// 		wait(200, msec);
+// 	}
+// 	else{
+// 		alignerdown();
+// 		wait(200, msec);
+// 	}
+// }
+
+void plgoalflap(){
+	if (PneuGOAlFLAP.value() == false) {
+		scraperup();
+		goalflapdown();
+	}
+	else{
+		goalflapup();
+	}
+}
+
+void pldescore(){
+	if (PneuDESCORE.value() == true) {
+		descoreup();
+	}
+	else{
+		descoredown();
+	}
+}
+
+
 //Display/motor monitor stuff past here
 
 
@@ -257,132 +379,6 @@ void gyroprint(){
 
 
 
-
-
-
-
-//subsystem 3 functions
-
-
-
-//scoring, intake and conveyor
-
-void intake (){ 
-	Conveyor.spin(fwd, 50, pct);
-	Intake.spin(fwd, 100, pct);
-	Outtake.stop();
-}
-
-void outtake (){
-	Conveyor.spin(reverse, 100, pct);
-	Outtake.spin(reverse, 100, pct);
-	Intake.spin(reverse, 100, pct);
-}
-
-void score (){
-	Conveyor.spin(fwd, 100, pct);
-	Outtake.spin(fwd, 100, pct);
-	Intake.spin(fwd, 100, pct);
-}
-
-void stopscore (){
-	Conveyor.stop();
-	Outtake.stop();
-	Intake.stop();
-}
-
-//individual pneumatic functions
-
-void scraperup (){
-	PneuSCRAPER.set(true);
-}
-
-void scraperdown(){
-	PneuSCRAPER.set(false);
-}
-
-void descoreup(){
-	PneuDESCORE.set(false);
-}
-
-void descoredown(){
-	PneuDESCORE.set(true);
-}
-
-void goalflapup(){
-	PneuGOAlFLAP.set(false);
-}
-
-void goalflapdown(){
-	PneuGOAlFLAP.set(true);
-}
-
-void alignerup(){
-	PneuALIGNER.set(true);
-}
-
-void alignerdown(){
-	PneuALIGNER.set(false);
-}
-
-
-//Pneumatic logic commands (pl stands for pneumatic logic)
-
-void plretractall(){
-	scraperup();
-	descoredown();
-	goalflapup();
-	alignerup();
-}
-
-void plscraper(){
-	if (PneuSCRAPER.value() == true) {
-		scraperdown();
-		goalflapup();
-		alignerup();
-		wait(200, msec);
-	}
-	else{
-		scraperup();
-		alignerdown();
-		wait(200, msec);
-	}
-}
-
-void plaligner(){
-	if (PneuALIGNER.value() == true) {
-		scraperup();
-		alignerup();
-		wait(200, msec);
-	}
-	else{
-		alignerdown();
-		wait(200, msec);
-	}
-}
-
-void plgoalflap(){
-	if (PneuGOAlFLAP.value() == false) {
-		scraperup();
-		goalflapdown();
-		wait(200, msec);
-	}
-	else{
-		goalflapup();
-		wait(200, msec);
-	}
-}
-
-void pldescore(){
-	if (PneuDESCORE.value() == true) {
-		descoreup();
-		wait(200, msec);
-	}
-	else{
-		descoredown();
-		wait(200, msec);
-	}
-}
 
 
 
@@ -550,50 +546,27 @@ alignerdown();
 				case 0:
 					//code 0
 					//Left Side Autonomous
-	// scraperup();	
-	// intake();
-	// inchdrive(1,1);//leave park zone contact
-	// gyroturn(-20);
-	// inchdrive(24,2);//pick up trio blocks
-	// wait(500, msec);
-	// inchdrive(-12, 1);
-	// gyroturn(-135);
-	// inchdrive (29, 2);//to long goal area
-	// gyroturn (-92);// turn so the back of robot faces the long goal
-	// wait(250, msec);
-	// inchdrive (-6, 1);//go to long goal
-	// score();//in long goal
-	// wait(1000, msec);
-	// intake();
-	// scraperdown();
-	// inchdrive(27, 3);//to loader
-	
-	// wait(300,msec);
-	// //back to reg
-	// inchdrive(-27.5, 2);//score loader
-	// score();
-
-	//middle scoring idea.// left-jason
+					//scoring mechanisms commented out bc of intake jamming issue
 	scraperup();	
 	intake();
-	gyroturn(-25);
-	inchdrive(25, 2);//pick up trio blocks
-	//inchdrive(-1, 1);//back up a little bit
-	wait(250, msec);
-	gyroturn(-135);//turn to middle goal
+	gyroturn(-23);
+	inchdrive(29, 2);//pick up trio blocks
+	gyroturn(-130);//turn to middle goal
 	plgoalflap();
-	inchdrive(-15, 2);//to middle goal
+	inchdrive(-12, 2);//to middle goal
 	score();
 	wait(1000, msec);//at middle goal
 	intake();//stop outtake roller
 	plscraper();
-	inchdrive(48, 3);//to loader area
+	inchdrive(45, 3);//to loader area
 	gyroturn(-180);//turn to face loader
-	inchdrive(12, 1.5);
+	inchdrive(15.5, 5); //to loader
 	wait(750, msec);
 	inchdrive(-5, 1);//exit loader
-	inchdrive(-23, 3);//to long goal
+	plscraper(); //scraperup aligner down
+	inchdrive(-22, 1.5);//to long goal
 	score();
+
 
 
 
@@ -812,19 +785,22 @@ if (Controller.ButtonL1.pressing()){  //Intakeing (outake stop)
 
 	if (Controller.ButtonUp.pressing()) {
 			plgoalflap();
+			wait(200, msec);
 		} 
 
 	if (Controller.ButtonX.pressing()) {
 			pldescore();
+			wait(200, msec);
 		}
 
 	if (Controller.ButtonA.pressing()) {
 			plscraper();
+			wait(200, msec);
 		}
 	
 
 	//Manual Retract All
-	if (Controller.ButtonL2.pressing()) {
+	if (Controller.ButtonUp.pressing() and Controller.ButtonX.pressing()) {
 			plretractall();
 		}
 
