@@ -42,7 +42,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 3;
+int AutonSelected = 0;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -61,7 +61,7 @@ bool preAuton = true;
 
   void Drive(int Lspeed, int Rspeed, int wt){
     
-	int klimiter = 1.1;
+	double klimiter = 1.0;
 
     LF.spin(fwd, Lspeed/klimiter, pct);
 	LM.spin(fwd, Lspeed/klimiter, pct);
@@ -83,31 +83,25 @@ bool preAuton = true;
 	}
         double currentTime = Brain.timer(seconds);
 
-  
-void gyroturn(float target, double timeOut = 2.0)
+  void gyroturn(float target, double timeOut = 2.0)
 {
-    float heading = 0.0;
-    float accuracy = 2.0;
+    float accuracy = 2.0;   // how close before stopping
 
-    // PID constants (TUNE THESE)
-    float kp = 1.1;
-    float ki = 0.00;
-    float kd = 0.0;
+    // Tune these only
+    float Kp = 0.4;
+    float Kd = 0.25;
 
     float error = 0;
     float previousError = 0;
-    float integral = 0;
     float derivative = 0;
 
-    float maxIntegral = 50;   // prevents integral windup
-    float maxSpeed = 50;     // motor power limit
+    float maxSpeed = 50;
 
     double startTime = Brain.timer(seconds);
-    double lastTime = startTime;
 
     while (true)
     {
-        heading = Gyro.rotation();
+        float heading = Gyro.rotation();
         error = target - heading;
 
         // Stop if within accuracy
@@ -118,23 +112,12 @@ void gyroturn(float target, double timeOut = 2.0)
         if (Brain.timer(seconds) - startTime > timeOut)
             break;
 
-    	 currentTime = Brain.timer(seconds);
-        double dt = currentTime - lastTime;
-        lastTime = currentTime;
-
-        // Integral
-        integral += error * dt;
-
-        // Clamp integral (anti-windup)
-        if (integral > maxIntegral) integral = maxIntegral;
-        if (integral < -maxIntegral) integral = -maxIntegral;
-
-        // Derivative
-        derivative = (error - previousError) / dt;
+        // Derivative (no dt needed if loop delay is constant)
+        derivative = error - previousError;
         previousError = error;
 
-        // PID output
-        float speed = (kp * error) + (ki * integral) + (kd * derivative);
+        // PD output
+        float speed = (Kp * error) + (Kd * derivative);
 
         // Clamp motor speed
         if (speed > maxSpeed) speed = maxSpeed;
@@ -142,19 +125,90 @@ void gyroturn(float target, double timeOut = 2.0)
 
         Drive(speed, -speed, 10);
 
-        wait(10, msec); // small delay for stability
+        wait(10, msec);
+		printf("Error: %0.2f Derivative = %0.2f \n", speed, derivative);
     }
-
-    Drive(0, 0, 0);
-
 	double endTime = Brain.timer(seconds);
-	wait(1, sec);
-    // Brain.Screen.printAt(10, 20, "Gyro Reading= %0.2f", Gyro.rotation());
-	// Brain.Screen.printAt(10, 40, "time = %0.2f", startTime);
+ 	wait(1, sec);
+	float heading = Gyro.rotation(deg); 
+//     // Brain.Screen.printAt(10, 20, "Gyro Reading= %0.2f", Gyro.rotation());
+// 	// Brain.Screen.printAt(10, 40, "time = %0.2f", startTime);
 	double heading2 = Gyro.heading(deg);
+// 	printf("degrees: %0.2f / %0.2f Time = %0.2f \n", heading, heading2, endTime - startTime); 
+	 Drive(0, 0, 0);
 	printf("degrees: %0.2f / %0.2f Time = %0.2f \n", heading, heading2, endTime - startTime);
-
 }
+// void gyroturn(float target, double timeOut = 2.0)
+// {
+//     float heading = 0.0;
+//     float accuracy = 2.0;
+
+//     // PID constants (TUNE THESE)
+//     float kp = 1.1;
+//     float ki = 0.00;
+//     float kd = 0.0;
+
+//     float error = 0;
+//     float previousError = 0;
+//     float integral = 0;
+//     float derivative = 0;
+
+//     float maxIntegral = 50;   // prevents integral windup
+//     float maxSpeed = 50;     // motor power limit
+
+//     double startTime = Brain.timer(seconds);
+//     double lastTime = startTime;
+
+//     while (true)
+//     {
+//         heading = Gyro.rotation();
+//         error = target - heading;
+
+//         // Stop if within accuracy
+//         if (fabs(error) < accuracy)
+//             break;
+
+//         // Timeout safety
+//         if (Brain.timer(seconds) - startTime > timeOut)
+//             break;
+
+//     	 currentTime = Brain.timer(seconds);
+//         double dt = currentTime - lastTime;
+//         lastTime = currentTime;
+
+//         // Integral
+//         integral += error * dt;
+
+//         // Clamp integral (anti-windup)
+//         if (integral > maxIntegral) integral = maxIntegral;
+//         if (integral < -maxIntegral) integral = -maxIntegral;
+
+//         // Derivative
+//         derivative = (error - previousError) / dt;
+//         previousError = error;
+
+//         // PID output
+//         float speed = (kp * error) + (ki * integral) + (kd * derivative);
+
+//         // Clamp motor speed
+//         if (speed > maxSpeed) speed = maxSpeed;
+//         if (speed < -maxSpeed) speed = -maxSpeed;
+
+//         Drive(speed, -speed, 10);
+
+//         wait(10, msec); // small delay for stability
+//     }
+
+//     Drive(0, 0, 0);
+
+// 	double endTime = Brain.timer(seconds);
+// 	wait(1, sec);
+//     // Brain.Screen.printAt(10, 20, "Gyro Reading= %0.2f", Gyro.rotation());
+// 	// Brain.Screen.printAt(10, 40, "time = %0.2f", startTime);
+// 	double heading2 = Gyro.heading(deg);
+// 	printf("degrees: %0.2f / %0.2f Time = %0.2f \n", heading, heading2, endTime - startTime);
+
+// }
 
 // void gyroturn(float target, double timeOut = 2)
 // {
@@ -585,7 +639,7 @@ while(Gyro.isCalibrating()){
 
 
 void autonomous(void) {
-
+Brain.Screen.clearScreen(); 
 alignerdown();
 // //left side Autonomous
 // 	IntakeBalls(); 
@@ -724,9 +778,9 @@ alignerdown();
 				
 				case 3:
 					//code 3
-	gyroturn(45);
-	//wait(2, sec); 
-	gyroturn(90); 
+	gyroturn(180);
+	 inchdrive(10, 1.5); 
+	// gyroturn(180); 
 					break;
 
 				case 4:
@@ -813,6 +867,7 @@ Brain.Screen.clearScreen();
 
   while (1) {
 //Motor Monitor
+Brain.Screen.clearScreen(); 
 
 Display ();
 
@@ -822,6 +877,12 @@ Display ();
 
     int Lspeed = Controller.Axis3.position(pct);
     int Rspeed = Controller.Axis2.position(pct);
+	// Deadband
+if (abs(Lspeed) < 10)
+    Lspeed = 0;
+
+if (abs(Rspeed) < 10)
+    Rspeed = 0;
 
     Drive(Lspeed, Rspeed, 10);
 
