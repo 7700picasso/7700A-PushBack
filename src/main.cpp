@@ -42,7 +42,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 0;
+int AutonSelected = 3;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -81,31 +81,102 @@ bool preAuton = true;
 		RM.stop();
 		RB.stop();
 	}
+        double currentTime = Brain.timer(seconds);
 
   
-
-
-void gyroturn(float target, double timeOut = 2)
+void gyroturn(float target, double timeOut = 2.0)
 {
-		float heading=0.0; //initialize a variable for heading
-		float accuracy=2.0; //how accurate to make the turn in degrees
-		float error=target-heading;
-		float kp= 0.3;
-		float speed=kp*error;
-		// Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
-		double startTime = Brain.timer(seconds);
+    float heading = 0.0;
+    float accuracy = 2.0;
 
-		while(fabs(error)>=accuracy){
-			speed=kp*error;
-			Drive(speed, -speed, 10); //turn right at Speed
-			heading=Gyro.rotation();  //measure the heading of the robot
-			error=target-heading;  //calculate error
-			if (Brain.timer(seconds)- startTime > timeOut) break; 
-			
-		}
-			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
-			Drive(0, 0, 0);  //stope the drive
+    // PID constants (TUNE THESE)
+    float kp = 1.1;
+    float ki = 0.00;
+    float kd = 0.0;
+
+    float error = 0;
+    float previousError = 0;
+    float integral = 0;
+    float derivative = 0;
+
+    float maxIntegral = 50;   // prevents integral windup
+    float maxSpeed = 50;     // motor power limit
+
+    double startTime = Brain.timer(seconds);
+    double lastTime = startTime;
+
+    while (true)
+    {
+        heading = Gyro.rotation();
+        error = target - heading;
+
+        // Stop if within accuracy
+        if (fabs(error) < accuracy)
+            break;
+
+        // Timeout safety
+        if (Brain.timer(seconds) - startTime > timeOut)
+            break;
+
+    	 currentTime = Brain.timer(seconds);
+        double dt = currentTime - lastTime;
+        lastTime = currentTime;
+
+        // Integral
+        integral += error * dt;
+
+        // Clamp integral (anti-windup)
+        if (integral > maxIntegral) integral = maxIntegral;
+        if (integral < -maxIntegral) integral = -maxIntegral;
+
+        // Derivative
+        derivative = (error - previousError) / dt;
+        previousError = error;
+
+        // PID output
+        float speed = (kp * error) + (ki * integral) + (kd * derivative);
+
+        // Clamp motor speed
+        if (speed > maxSpeed) speed = maxSpeed;
+        if (speed < -maxSpeed) speed = -maxSpeed;
+
+        Drive(speed, -speed, 10);
+
+        wait(10, msec); // small delay for stability
+    }
+
+    Drive(0, 0, 0);
+
+	double endTime = Brain.timer(seconds);
+	wait(1, sec);
+    // Brain.Screen.printAt(10, 20, "Gyro Reading= %0.2f", Gyro.rotation());
+	// Brain.Screen.printAt(10, 40, "time = %0.2f", startTime);
+	double heading2 = Gyro.heading(deg);
+	printf("degrees: %0.2f / %0.2f Time = %0.2f \n", heading, heading2, endTime - startTime);
+
 }
+
+// void gyroturn(float target, double timeOut = 2)
+// {
+// 		float heading=0.0; //initialize a variable for heading
+// 		float accuracy=2.0; //how accurate to make the turn in degrees
+// 		float error=target-heading;
+// 		float kp= 0.3;
+// 		float speed=kp*error;
+// 		// Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
+// 		double startTime = Brain.timer(seconds);
+
+// 		while(fabs(error)>=accuracy){
+// 			speed=kp*error;
+// 			Drive(speed, -speed, 10); //turn right at Speed
+// 			heading=Gyro.rotation();  //measure the heading of the robot
+// 			error=target-heading;  //calculate error
+// 			if (Brain.timer(seconds)- startTime > timeOut) break; 
+			
+// 		}
+// 			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
+// 			Drive(0, 0, 0);  //stope the drive
+// }
 
 
 void inchdrive (float inches, double timeOut ){
@@ -514,6 +585,7 @@ while(Gyro.isCalibrating()){
 
 
 void autonomous(void) {
+
 alignerdown();
 // //left side Autonomous
 // 	IntakeBalls(); 
@@ -652,7 +724,9 @@ alignerdown();
 				
 				case 3:
 					//code 3
-	gyroturn(90);
+	gyroturn(45);
+	//wait(2, sec); 
+	gyroturn(90); 
 					break;
 
 				case 4:
