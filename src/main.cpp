@@ -42,7 +42,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 0;
+int AutonSelected = 1;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -676,21 +676,21 @@ alignerdown();
 	scraperup();	
 	intake();
 	gyroturn(-23);
-	inchdrive(29, 2);//pick up trio blocks
+	inchdrive(27, 2);//pick up trio blocks
 	gyroturn(-130);//turn to middle goal
 	plgoalflap();
 	inchdrive(-12, 2);//to middle goal
 	score();
-	wait(1000, msec);//at middle goal
+	wait(500, msec);//at middle goal
 	intake();//stop outtake roller
 	plscraper();
-	inchdrive(45, 3);//to loader area
+	inchdrive(44, 3);//to loader area
 	gyroturn(-180);//turn to face loader
-	inchdrive(15.5, 5); //to loader
+	inchdrive(14, 2); //to loader
 	wait(750, msec);
 	inchdrive(-5, 1);//exit loader
 	plscraper(); //scraperup aligner down
-	inchdrive(-22, 1.5);//to long goal
+	inchdrive(-21, 1.5);//to long goal
 	score();
 
 
@@ -702,17 +702,15 @@ alignerdown();
 				case 1:
 					//code 1
 					// Right Side Autononomous
-	scraperup();
+	plscraper();
 	inchdrive(30, 2);
-	wait(500, msec);
 	gyroturn(90);
-	scraperdown();
 	intake();
 	inchdrive(10, 2.5);
 	wait (500, msec);
-	Intake.stop();
-	alignerup();
-	inchdrive(-25, 2);
+	inchdrive(-3, 1);
+	plscraper();
+	inchdrive(-22, 2);
 	score();
 	// gyroturn(80);
 	// inchdrive (29);
@@ -779,7 +777,7 @@ alignerdown();
 				case 3:
 					//code 3
 	gyroturn(180);
-	 inchdrive(10, 1.5); 
+	gyroturn(90);
 	// gyroturn(180); 
 					break;
 
