@@ -42,7 +42,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 1;
+int AutonSelected = 0;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -83,7 +83,7 @@ bool preAuton = true;
 	}
         double currentTime = Brain.timer(seconds);
 
-  void gyroturn(float target, double timeOut = 2.0)
+  void gyroturn(float target, double timeOut = 1.0)
 {
     float accuracy = 2.0;   // how close before stopping
 
@@ -703,20 +703,23 @@ alignerdown();
 					//code 1
 					// Right Side Autononomous
 	plscraper();
-	inchdrive(30, 2);
-	gyroturn(90);
+	inchdrive(29.5, 2);
+	gyroturn(88);
 	intake();
-	inchdrive(10, 2.5);
+	inchdrive(12, 1);
 	wait (500, msec);
-	inchdrive(-3, 1);
+	inchdrive(-3, 0.5);
+	//gyroturn(88); 
 	plscraper();
 	inchdrive(-22, 2);
 	score();
-	// gyroturn(80);
-	// inchdrive (29);
-	// gyroturn (90);
-	// inchdrive (-5.5);
-	// score();
+	// wait(1000, msec); 
+	// stopscore(); 
+	// gyroturn(120); 
+	// inchdrive(10, 1); 
+	// gyroturn(90); 
+	// inchdrive(-12, 2); 
+	
 					break;
 				
 				case 2:
