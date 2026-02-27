@@ -42,7 +42,7 @@ float wheelr = wheeld / 2;
 float wheelc = pi * wheeld;
 float gearratio = 0.75;
 
-int AutonSelected = 0;
+int AutonSelected = 1;
 int AutonMin = 0;
 int AutonMax = 4;
 
@@ -82,6 +82,7 @@ bool preAuton = true;
 		RB.stop();
 	}
         double currentTime = Brain.timer(seconds);
+
 
   void gyroturn(float target, double timeOut = 1.0)
 {
@@ -210,27 +211,27 @@ bool preAuton = true;
 
 // }
 
-// void gyroturn(float target, double timeOut = 2)
-// {
-// 		float heading=0.0; //initialize a variable for heading
-// 		float accuracy=2.0; //how accurate to make the turn in degrees
-// 		float error=target-heading;
-// 		float kp= 0.3;
-// 		float speed=kp*error;
-// 		// Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
-// 		double startTime = Brain.timer(seconds);
+// // void gyroturn(float target, double timeOut = 2)
+// // {
+// // 		float heading=0.0; //initialize a variable for heading
+// // 		float accuracy=2.0; //how accurate to make the turn in degrees
+// // 		float error=target-heading;
+// // 		float kp= 0.3;
+// // 		float speed=kp*error;
+// // 		// Gyro.setRotation(0.0, degrees);  //reset Gyro to zero degrees
+// // 		double startTime = Brain.timer(seconds);
 
-// 		while(fabs(error)>=accuracy){
-// 			speed=kp*error;
-// 			Drive(speed, -speed, 10); //turn right at Speed
-// 			heading=Gyro.rotation();  //measure the heading of the robot
-// 			error=target-heading;  //calculate error
-// 			if (Brain.timer(seconds)- startTime > timeOut) break; 
+// // 		while(fabs(error)>=accuracy){
+// // 			speed=kp*error;
+// // 			Drive(speed, -speed, 10); //turn right at Speed
+// // 			heading=Gyro.rotation();  //measure the heading of the robot
+// // 			error=target-heading;  //calculate error
+// // 			if (Brain.timer(seconds)- startTime > timeOut) break; 
 			
-// 		}
-// 			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
-// 			Drive(0, 0, 0);  //stope the drive
-// }
+// // 		}
+// // 			Brain.Screen.printAt(10, 20, "Gyro Reading= %.2f", heading); 
+// // 			Drive(0, 0, 0);  //stope the drive
+// // }
 
 
 void inchdrive (float inches, double timeOut ){
@@ -640,7 +641,6 @@ while(Gyro.isCalibrating()){
 
 void autonomous(void) {
 Brain.Screen.clearScreen(); 
-alignerdown();
 // //left side Autonomous
 // 	IntakeBalls(); 
 // 	inchdrive(28);
@@ -653,27 +653,12 @@ alignerdown();
 // 	ScoreBalls();
 
 
-//----------------------------------------------\|
-
-	// // Right Side Autononomous
-	
-	// IntakeBalls(); 
-	// inchdrive(28);
-	// StopIntake(); 
-	// inchdrive(-15);
-	// gyroturn(-120);  
-	// inchdrive(-30); 
-	// gyroturn(-88); 
-	// inchdrive(-6); 
-	// ScoreBalls();
-	
-
 	switch (AutonSelected) {
 				case 0:
 					//code 0
 					//Left Side Autonomous
 					//scoring mechanisms commented out bc of intake jamming issue
-	scraperup();	
+    alignerdown();
 	intake();
 	gyroturn(-23);
 	inchdrive(27, 2);//pick up trio blocks
@@ -694,87 +679,104 @@ alignerdown();
 	score();
 
 
-
-
-
 					break;
 				
 				case 1:
 					//code 1
 					// Right Side Autononomous
 	plscraper();
-	inchdrive(29.5, 2);
-	gyroturn(88);
+	inchdrive(30.5, 2);
+	gyroturn(85);
 	intake();
-	inchdrive(12, 1);
+	inchdrive(11, 1);
 	wait (500, msec);
 	inchdrive(-3, 0.5);
-	//gyroturn(88); 
 	plscraper();
-	inchdrive(-22, 2);
+	inchdrive(-24, 2);
 	score();
-	// wait(1000, msec); 
-	// stopscore(); 
-	// gyroturn(120); 
-	// inchdrive(10, 1); 
-	// gyroturn(90); 
-	// inchdrive(-12, 2); 
+	wait(2000, msec); 
+	stopscore(); 
+	inchdrive(13, 2);
+	gyroturn(45); 
+	inchdrive(-16, 1); 
+	gyroturn(90); 
+	inchdrive(-15, 2); 
 	
 					break;
 				
 				case 2:
 					//code 2
 					//skills left
-	scraperup();	
+	plscraper();
+	inchdrive(30, 2);//to loader right area
+	gyroturn(78);//face loader
 	intake();
-	inchdrive(24,2);//pick up trio blocks
-	wait(500, msec);
-	inchdrive(-12, 1);
-	gyroturn(-73);
-	inchdrive (27.5, 2);//to long goal area
-	gyroturn (-100);// turn so the back of robot faces the long goal
-	wait(250, msec);
-	inchdrive (-7, 1);//go to long goal
-	score();//in long goal
-	wait(3000, msec);
-	intake();
-	scraperdown();
-	Drive(50, 50, 10);//to loader
-	wait(1500, msec);
-	drivestop();
-	wait(3000, msec);
-	inchdrive(-2, 1);
-	scraperup();
-	inchdrive(-25.5, 2);//to long goal
+	inchdrive(12, 1);//to loader
+	wait (500, msec);//in loader
+	inchdrive(-3, 0.5);
+	plscraper();
+	inchdrive(-24, 2);//to long goal
 	score();
-	wait (2000, msec);
-	stopscore();
-	gyroturn (90);
-	inchdrive (25, 1.5);//slam into wall
-	wait (500, msec);
-	inchdrive(-60, 5);	//front of park zone
-	gyroturn (-100); //face park zone
+	wait(2000, msec); 
+	stopscore(); 
+	inchdrive(5, 2);//back out of long goal
+	plscraper();
+	gyroturn(-180);//turn to left side of feild
+	inchdrive(96, 5);//to left side
+	gyroturn(-90);//face loader
+	inchdrive(12, 1);//to loader
+	wait (500, msec);//in loader
+	inchdrive(-3, 0.5);
+	plscraper();//scraper up/aligner down
+	inchdrive(-24, 2);//to long goal
 	score();
-	Drive(100, 100, 10);
+	wait(2000, msec); 
+	stopscore(); 
+	inchdrive(5, 2);//back out of long
+	plscraper();//scraper up
+	gyroturn(-0);
+	inchdrive(48, 3);
+	gyroturn(90);
+	score();//prep intake parking zone blocks
+	repeat(3){//rock robot to prevent intake getting stuck on wall
+	Drive(70, 70, 5);
+	wait(750, msec);
+	inchdrive(-1, 1);
+	}
 
-	// inchdrive (-40, 2); //go next to park zone
-	// gyroturn(-90);
-	// inchdrive (30, 1);
-	// inchdrive (-2, 1.5);
-	// gyroturn (-86);
+	// alignerdown();
+	// intake();
+	// inchdrive(24,2);//pick up trio blocks
+	// wait(500, msec);
+	// inchdrive(-12, 1);
+	// gyroturn(-73);
+	// inchdrive (27.5, 2);//to long goal area
+	// gyroturn (-100);// turn so the back of robot faces the long goal
+	// wait(250, msec);
+	// inchdrive (-7, 1);//go to long goal
+	// score();//in long goal
+	// wait(3000, msec);
+	// intake();
+	// scraperdown();
+	// Drive(50, 50, 10);//to loader
+	// wait(1500, msec);
+	// drivestop();
+	// wait(3000, msec);
+	// inchdrive(-2, 1);
+	// scraperup();
+	// inchdrive(-25.5, 2);//to long goal
 	// score();
-	// inchdrive(43, 10);
+	// wait (2000, msec);
+	// stopscore();
+	// gyroturn (90);
+	// inchdrive (25, 1.5);//slam into wall
+	// wait (500, msec);
+	// inchdrive(-60, 5);	//front of park zone
+	// gyroturn (-100); //face park zone
+	// score();
+	// Drive(100, 100, 10);
+
 	
-
-
-	
-	// gyroturn(-101.5);
-	 //inchdrive(-3.5, 1);
-	// PneuSCRAPER.set(true);
-	 
-	// Drive(40, 40, 650); 
-	// Drive(0,0,0);
-
 					break;
 				
 				case 3:
@@ -791,63 +793,6 @@ alignerdown();
 
 
 	}
-//Test Code
-
-	//left side
-	// intake();
-	// inchdrive(27);
-	// wait(500, msec);
-	// inchdrive(-15);
-	// gyroturn(-70);
-	// inchdrive (29);
-	// gyroturn (-90);
-	// inchdrive (-16);
-	// score();
-
-//right side
-	// intake();
-	// inchdrive(27);
-	// wait(500, msec);
-	// inchdrive(-15);
-	// gyroturn(70);
-	// inchdrive (29);
-	// gyroturn (90);
-	// inchdrive (-16);
-	// score();
-
-//skills
-// inchdrive(36);
-// gyroturn(-90);
-// inchdrive(-4);
-// PneuSCRAPER.set(true);
-// intake();
-// Drive(40, 40, 650); 
-
-// // Drive(-40, -40, 500);   was too odd:%
-// // Drive(40, 40, 600); 
-// // Drive(-40, -40, 500);
-// // Drive(40, 40, 600); 
-// // Drive(-40, -40, 500);
-// // Drive(40, 40, 600); 
-// // Drive(-40, -40, 500);
-// // Drive(40, 40, 600); 
-
-// Drive(0, 0, 0); // we should have gotten all the blocks
-// Drive(40, 40, 400 ); 
-// Drive(0,0,0); 
-// wait(4500, msec);
-// // inchdrive(-2);
-// // inchdrive(2);
-// // inchdrive(-2);
-// // inchdrive(2);
-// // inchdrive(-2);
-// // inchdrive(2);
-// // gyroturn(45);
-// // inchdrive(3);
-// // gyroturn(-45);
-// inchdrive(-24.5);
-// score();
-
 
 
 
